@@ -17,14 +17,16 @@
 		}
 
 		function uninstall(){
+			// TODO: remove all created formatters?
+			return true;
 		}
 
 		function update(){
-			$this->install();
+			return $this->install();
 		}
 
 		function enable(){
-			$this->install();
+			return $this->install();
 		}
 
 		public function fetchNavigation(){
