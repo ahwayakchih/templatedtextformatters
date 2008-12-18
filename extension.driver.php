@@ -21,7 +21,7 @@
 			return true;
 		}
 
-		function update(){
+		function update($previousVersion=false){
 			return $this->install();
 		}
 
