@@ -166,7 +166,7 @@
 			}
 
 			##Duplicate
-			if($isDuplicate) $this->_errors['name'] = 'Text formatter with the name <code>'.$classname.'</code> name already exists';
+			if($isDuplicate) $this->_errors['name'] = 'Text formatter with the name <code>'.$classname.'</code> already exists';
 
 			if(!empty($this->_errors)){
 				return;
