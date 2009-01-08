@@ -213,7 +213,7 @@
 			if(!General::deleteFile(TEXTFORMATTERS . '/formatter.' . $this->_context[0] . '.php'))
 				$this->pageAlert('Failed to delete <code>'.$this->_context[0].'</code>. Please check permissions.', AdministrationPage::PAGE_ALERT_ERROR);
 			else
-				redirect(URL . '/symphony/extension/templatedtextformatters/list/');
+				redirect(URL . '/symphony/extension/templatedtextformatters/');
 		}
 
 	}

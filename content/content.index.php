@@ -3,7 +3,7 @@
 	require_once(TOOLKIT . '/class.administrationpage.php');
 	require_once(TOOLKIT . '/class.textformattermanager.php');
 
-	Class contentExtensionTemplatedTextFormattersList extends AdministrationPage{
+	Class contentExtensionTemplatedTextFormattersIndex extends AdministrationPage{
 
 		private $_driver;
 
@@ -17,7 +17,7 @@
 
 		function view(){
 			$this->setPageType('table');
-			$this->appendSubheading('Templated Text Formatters', Widget::Anchor('Create New', $this->_Parent->getCurrentPageURL().'../edit/', 'Create a new hub', 'create button'));
+			$this->appendSubheading('Templated Text Formatters', Widget::Anchor('Create New', '/symphony/extension/templatedtextformatters/edit/', 'Create a new hub', 'create button'));
 
 			$aTableHead = array(
 				array('Title', 'col'),
@@ -29,7 +29,7 @@
 
 			$formatters = $this->_driver->listAll();
 			if(!is_array($formatters) || empty($formatters)){
-				$aTableBody = array(Widget::TableRow(array(Widget::TableData(__('None Found.'), 'inactive', NULL, count($aTableHead)))));
+				$aTableBody = array(Widget::TableRow(array(Widget::TableData(__('None found.'), 'inactive', NULL, count($aTableHead)))));
 			}
 			else {
 				$tfm = new TextformatterManager($this->_Parent);
@@ -37,7 +37,7 @@
 					$formatter = $tfm->create($id);
 					$about = $formatter->about();
 
-					$td1 = Widget::TableData(Widget::Anchor($about['name'], $this->_Parent->getCurrentPageURL().'../edit/'.$id.'/', $about['name']));
+					$td1 = Widget::TableData(Widget::Anchor($about['name'], URL."/symphony/extension/templatedtextformatters/edit/$id/", $about['name']));
 					$td2 = Widget::TableData($about['templatedtextformatters-type']);
 					$td3 = Widget::TableData($about['description']);
 
@@ -71,7 +71,7 @@
 				foreach ($_POST['items'] as $id => $selected) {
 					$this->delete($id);
 				}
-				redirect(URL . '/symphony/extension/templatedtextformatters/list/');
+				redirect(URL . '/symphony/extension/templatedtextformatters/');
 			}
 		}
 
