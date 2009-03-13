@@ -47,7 +47,7 @@
 			$div->setAttribute('class', 'group');
 
 			$label = Widget::Label(__('Name'));
-			if (isset($about['name'])) $label->appendChild(new XMLElement('i', __('Changing name makes fields forget about formatter!')));
+			if (isset($about['name'])) $label->appendChild(new XMLElement('i', __('Change will disconnect fields from formatter!')));
 			$label->appendChild(Widget::Input('fields[name]', ($fields['name'] ? $fields['name'] : $about['name'])));
 			$div->appendChild((isset($this->_errors['name']) ? $this->wrapFormElementWithError($label, $this->_errors['name']) : $label));
 

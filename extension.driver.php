@@ -13,7 +13,13 @@
 		}
 
 		function install() {
-			return General::realiseDirectory(TEXTFORMATTERS, $this->_Parent->Configuration->get('write_mode', 'directory'));
+			$result = true;
+
+			if (!file_exists(TEXTFORMATTERS)) {
+				$result = General::realiseDirectory(TEXTFORMATTERS, $this->_Parent->Configuration->get('write_mode', 'directory'));
+			}
+
+			return $result;
 		}
 
 		function uninstall() {
