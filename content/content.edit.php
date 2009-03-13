@@ -187,6 +187,11 @@
 			if (is_object($this->formatter) && method_exists($this->formatter, 'ttf_tokens')) {
 				$tokens = array_merge($tokens, $this->formatter->ttf_tokens());
 			}
+			else {
+				include_once($tplfile);
+				$temp = new formatter($this->_Parent);
+				$tokens = array_merge($tokens, $temp->ttf_tokens());
+			}
 
 			$ttfShell = file_get_contents($tplfile);
 			$ttfShell = str_replace(array_keys($tokens), $tokens, $ttfShell);
