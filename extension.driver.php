@@ -13,7 +13,7 @@
 		}
 
 		function install(){
-			return mkdir(TEXTFORMATTERS, intval($this->_Parent->Configuration->get('write_mode', 'directory'), 8), true);
+			return General::realiseDirectory(TEXTFORMATTERS, $this->_Parent->Configuration->get('write_mode', 'directory'));
 		}
 
 		function uninstall(){
@@ -34,7 +34,7 @@
 				array(
 					'location' => 200,
 					'name' => __('Templated Text Formatters'),
-					'limit'		=> 'developer',
+					'limit'	=> 'developer',
 				)
 			);
 		}
@@ -55,7 +55,7 @@
 
 		public function listTypes() {
 			$extensions = $this->_Parent->ExtensionManager->listInstalledHandles();
-			if (!is_array($extensions)) return array();
+			if (!is_array($extensions) || empty($extensions)) return array();
 
 			$result = array();
 			foreach ($extensions as $e) {

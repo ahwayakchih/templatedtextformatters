@@ -28,18 +28,27 @@
 		}
 				
 		function run($string){
-			if (!$string) return $string;
+			if (!$string || !file_exists(EXTENSIONS . '/markdown/lib/')) return $string;
 
-		    if(!function_exists('Markdown')) {
-				if ($this->_use_markdownextra) include_once(EXTENSIONS . '/markdown/lib/markdown_extra.php');
-				else include_once(EXTENSIONS . '/markdown/lib/markdown.php');
+		    if (!function_exists('Markdown')) {
+				if ($this->_use_markdownextra == 'yes' && file_exists(EXTENSIONS . '/markdown/lib/markdown_extra.php')) @include(EXTENSIONS . '/markdown/lib/markdown_extra.php');
+				else if (file_exists(EXTENSIONS . '/markdown/lib/markdown.php')) @include_once(EXTENSIONS . '/markdown/lib/markdown.php');
 			}
 
-			if ($this->_use_smartypants) {
-				include_once(EXTENSIONS . '/markdown/lib/smartypants.php');
-				return SmartyPants(stripslashes(Markdown($string)));
+			if (function_exists('Markdown')) {
+				$string = Markdown($string);
 			}
-			else return stripslashes(Markdown($string));
+
+			if ($this->_use_smartypants == 'yes' && !function_exists('SmartyPants')) {
+				if (file_exists(EXTENSIONS . '/markdown/lib/smartypants.php')) @include_once(EXTENSIONS . '/markdown/lib/smartypants.php');
+				else $this->_use_smartypants = false;
+			}
+
+			if ($this->_use_smartypants == 'yes') {
+				return SmartyPants(stripslashes($string));
+			}
+
+			return stripslashes($string);
 		}
 
 		// Hook for driver to call when generating edit form
