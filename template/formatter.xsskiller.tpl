@@ -1,15 +1,16 @@
 <?php
 
 	Class formatter/* CLASS NAME */ extends TextFormatter {
+
 		private $_description;
 
-		function __construct(&$parent) {
+		public function __construct(&$parent) {
 			parent::__construct($parent);
 
 			$this->_description = '/* DESCRIPTION */';
 		}
 		
-		function about() {
+		public function about() {
 			return array(
 				'name' => '/* NAME */', // required
 				'author' => array(
@@ -25,7 +26,7 @@
 			);
 		}
 				
-		function run($val) {
+		public function run($val) {
 			$val = trim($val);
 			if (strlen($val) < 1) return $val;
 
@@ -90,7 +91,7 @@
 
 		// Hook for driver to call when generating edit form
 		// Add form fields to $form
-		function ttf_form(&$form, &$page) {
+		public function ttf_form(&$form, &$page) {
 			$label = Widget::Label(__('Description'));
 			$label->appendChild(Widget::Input('fields[description]', $this->_description ? $this->_description : $fields['description']));
 			$form->appendChild($label);
@@ -98,7 +99,7 @@
 
 		// Hook called by TemplatedTextFormatters when saving formatter
 		// @return array where each key is a string which will be replaced in this template, and value is what key will be replaced with.
-		function ttf_tokens() {
+		public function ttf_tokens() {
 			$this->_description = str_replace(array('\'', '"'), array('&#039;', '&quot;'), $_POST['fields']['description']);
 
 			return array(

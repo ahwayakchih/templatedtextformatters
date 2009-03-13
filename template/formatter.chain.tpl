@@ -1,9 +1,10 @@
 <?php
 
 	Class formatter/* CLASS NAME */ extends TextFormatter {
+
 		private $_formatters;
 
-		function __construct(&$parent) {
+		public function __construct(&$parent) {
 			parent::__construct($parent);
 
 			/* FORMATTERS */
@@ -13,7 +14,7 @@
 			}
 		}
 		
-		function about() {
+		public function about() {
 			return array(
 				'name' => '/* NAME */', // required
 				'author' => array(
@@ -29,7 +30,7 @@
 			);
 		}
 				
-		function run($string) {
+		public function run($string) {
 			if (strlen(trim($string)) < 1) return $string;
 
 			if (count($this->_formatters) < 1) return stripslashes($string);
@@ -45,7 +46,7 @@
 
 		// Hook for driver to call when generating edit form
 		// Add form fields to $form
-		function ttf_form(&$form, &$page) {
+		public function ttf_form(&$form, &$page) {
 			$formatters = $this->_Parent->FormatterManager->listAll();
 
 			// Make formatters from $this->_formatters to be first and keep their order
@@ -111,7 +112,7 @@
 
 		// Hook called by TemplatedTextFormatters when saving formatter
 		// @return array where each key is a string which will be replaced in this template, and value is what key will be replaced with.
-		function ttf_tokens() {
+		public function ttf_tokens() {
 			$formatters = $this->_Parent->FormatterManager->listAll();
 
 			$description = '';

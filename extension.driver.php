@@ -12,7 +12,7 @@
 				 		);
 		}
 
-		function install() {
+		public function install() {
 			$result = true;
 
 			if (!file_exists(TEXTFORMATTERS)) {
@@ -22,16 +22,16 @@
 			return $result;
 		}
 
-		function uninstall() {
+		public function uninstall() {
 			// TODO: remove all created formatters?
 			return true;
 		}
 
-		function update($previousVersion=false) {
+		public function update($previousVersion=false) {
 			return $this->install();
 		}
 
-		function enable() {
+		public function enable() {
 			return $this->install();
 		}
 

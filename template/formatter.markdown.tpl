@@ -1,6 +1,7 @@
 <?php
 
 	Class formatter/* CLASS NAME */ extends TextFormatter {
+
 		private $_use_markdownextra;
 		private $_use_smartypants;
 		private $_use_link_class;
@@ -8,7 +9,7 @@
 
 		private static $_markdown;
 
-		function __construct(&$parent) {
+		public function __construct(&$parent) {
 			parent::__construct($parent);
 
 			$this->_use_markdownextra = '/* USE MARKDOWNEXTRA */';
@@ -17,7 +18,7 @@
 			$this->_use_backlink_class = '/* USE BACKLINK CLASS */';
 		}
 		
-		function about() {
+		public function about() {
 			return array(
 				'name' => '/* NAME */', // required
 				'author' => array(
@@ -33,7 +34,7 @@
 			);
 		}
 				
-		function run($string) {
+		public function run($string) {
 			if (!$string) return $string;
 
 			if (!isset(self::$_markdown)) {
@@ -65,7 +66,7 @@
 
 		// Hook for driver to call when generating edit form
 		// Add form fields to $form
-		function ttf_form(&$form, &$page) {
+		public function ttf_form(&$form, &$page) {
 			$div = new XMLElement('div');
 			$div->setAttribute('class', 'group');
 
@@ -101,7 +102,7 @@
 
 		// Hook called by TemplatedTextFormatters when saving formatter
 		// @return array where each key is a string which will be replaced in this template, and value is what key will be replaced with.
-		function ttf_tokens() {
+		public function ttf_tokens() {
 			// Reconstruct our current patterns array and description, so they are up-to-date when form is viewed right after save, without refresh/redirect
 			$this->_use_markdownextra = (isset($_POST['fields']['use_markdownextra']) ? $_POST['fields']['use_markdownextra'] : 'no');
 			$this->_use_smartypants = (isset($_POST['fields']['use_smartypants']) ? $_POST['fields']['use_smartypants'] : 'no');

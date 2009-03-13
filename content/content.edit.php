@@ -10,7 +10,7 @@
 
 		private $_driver;
 
-		function __construct(&$parent) {
+		public function __construct(&$parent) {
 			parent::__construct($parent);
 
 			if (!is_object($this->_Parent->FormatterManager)) {
@@ -23,7 +23,7 @@
 			$this->_driver = $this->_Parent->ExtensionManager->create('templatedtextformatters');
 		}
 
-		function view() {
+		public function view() {
 			$about = array();
 			if ($this->_context[0] && !is_object($this->formatter)) {
 				$this->formatter = $this->_Parent->FormatterManager->create($this->_context[0]);
@@ -47,7 +47,7 @@
 			$div->setAttribute('class', 'group');
 
 			$label = Widget::Label(__('Name'));
-			if (isset($about['name'])) $label->appendChild(new XMLElement('i', __('Change will disconnect fields from formatter!')));
+			if (isset($about['name'])) $label->appendChild(new XMLElement('i', __('Change will disconnect formatter from fields!')));
 			$label->appendChild(Widget::Input('fields[name]', ($fields['name'] ? $fields['name'] : $about['name'])));
 			$div->appendChild((isset($this->_errors['name']) ? $this->wrapFormElementWithError($label, $this->_errors['name']) : $label));
 
@@ -114,12 +114,12 @@
 			$this->Form->appendChild($div);
 		}
 
-		function action() {
+		public function action() {
 			if (array_key_exists('save', $_POST['action'])) $this->save();
 			else if (array_key_exists('delete', $_POST['action'])) $this->delete();
 		}
 
-		function save() {
+		public function save() {
 			$about = array();
 			if ($this->_context[0] && !is_object($this->formatter)) {
 				$this->formatter = $this->_Parent->FormatterManager->create($this->_context[0]);
@@ -216,7 +216,7 @@
 			}
 		}
 
-		function delete() {
+		public function delete() {
 			$file = TEXTFORMATTERS . '/formatter.' . $this->_context[0] . '.php';
 			if (!General::deleteFile($file))
 				$this->pageAlert(__('Failed to delete <code>%s</code>. Please check permissions.', array($file)), Alert::ERROR);

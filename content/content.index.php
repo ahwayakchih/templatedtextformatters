@@ -7,7 +7,7 @@
 
 		private $_driver;
 
-		function __construct(&$parent) {
+		public function __construct(&$parent) {
 			parent::__construct($parent);
 
 			$this->setTitle(__('%1$s &ndash; %2$s', array(__('Symphony'), __('Templated Text Formatters'))));
@@ -15,7 +15,7 @@
 			$this->_driver = $this->_Parent->ExtensionManager->create('templatedtextformatters');
 		}
 
-		function view() {
+		public function view() {
 			$this->setPageType('table');
 			$this->appendSubheading(__('Templated Text Formatters'), Widget::Anchor(__('Create New'), '/symphony/extension/templatedtextformatters/edit/', __('Create a new hub'), 'create button'));
 
@@ -65,7 +65,7 @@
 			$this->Form->appendChild($div);
 		}
 
-		function action() {
+		public function action() {
 			if (!$_POST['action']['apply']) return;
 			if ($_POST['with-selected'] == 'delete' && is_array($_POST['items'])) {
 				foreach ($_POST['items'] as $id => $selected) {
@@ -75,7 +75,7 @@
 			}
 		}
 
-		function delete($id) {
+		public function delete($id) {
 			$file = TEXTFORMATTERS . '/formatter.' . $id . '.php';
 			if (!General::deleteFile($file))
 				$this->pageAlert(__('Failed to delete <code>%s</code>. Please check permissions.', array($file)), Alert::ERROR);
