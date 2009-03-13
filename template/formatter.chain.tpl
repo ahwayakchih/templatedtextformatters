@@ -21,7 +21,7 @@
 					'website' => '/* AUTHOR WEBSITE */',
 					'email' => '/* AUTHOR EMAIL */'
 				),
-				'version' => '1.2',
+				'version' => '1.3',
 				'release-date' => '/* RELEASE DATE */',
 				'description' => '/* DESCRIPTION */',
 				'templatedtextformatters-version' => '/* TEMPLATEDTEXTFORMATTERS VERSION */', // required
