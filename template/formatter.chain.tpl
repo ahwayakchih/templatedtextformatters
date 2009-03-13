@@ -1,5 +1,6 @@
 <?php
-
+	ini_set("display_errors","2");
+	ERROR_REPORTING(E_ALL);
 	Class formatter/* CLASS NAME */ extends TextFormatter {
 
 		private $_formatters;
@@ -120,12 +121,7 @@
 			// Reconstruct our current formatters array, so it's up-to-date when form is viewed right after save, without refresh/redirect
 			$this->_formatters = array();
 			if (is_array($_POST['fields']['formatters'])) {
-				foreach ($_POST['fields']['formatters'] as $id => $name) {
-					if (is_array($formatters[$id])) {
-						$this->_formatters[$id] = $formatters[$id]['name'];
-						$code .= '\''.$id.'\' => \''.preg_replace('/[^\w\s\.-_\&\;\#]/i', '', $this->_formatters[$id]).'\',';
-					}
-				}
+				$this->_formatters = array_intersect_key($_POST['fields']['formatters'], $formatters);
 				$description = __('Formatting text in following order: %s', array(implode(' &#8594; ', $this->_formatters)));
 			}
 			else {
@@ -134,7 +130,7 @@
 
 			return array(
 				'/*'.' DESCRIPTION */' => preg_replace('/[^\w\s\.-_\&\;\#\n]/i', '', $description),
-				'/*'.' FORMATTERS */' => '$this->_formatters = array('.$code.');'
+				'/*'.' FORMATTERS */' => '$this->_formatters = '.preg_replace(array("/\n  /", "/\n\)\s*$/"), array("\n\t\t\t\t", "\n\t\t\t);"), var_export($this->_formatters, true)),
 			);
 		}
 	}

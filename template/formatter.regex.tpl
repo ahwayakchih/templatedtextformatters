@@ -89,15 +89,13 @@
 
 			$index = 0;
 			$code = '';
-			while ($_POST['fields']['patterns'][$index]) {
-				$this->_patterns[$_POST['fields']['patterns'][$index]] = $_POST['fields']['replacements'][$index];
-				$code .= '\''.preg_replace('/([^\\\\])\'/', '$1\\\'', $_POST['fields']['patterns'][$index]).'\' => \''.preg_replace('/([^\\\\])\'/', '$1\\\'', $_POST['fields']['replacements'][$index]).'\',';
-				$index++;
+			if (!empty($_POST['fields']['patterns']) && count($_POST['fields']['patterns']) == count($_POST['fields']['replacements'])) {
+				$this->_patterns = array_combine($_POST['fields']['patterns'], $_POST['fields']['replacements']);
 			}
 
 			return array(
 				'/*'.' DESCRIPTION */' => $this->_description,
-				'/*'.' PATTERNS */' => '$this->_patterns = array('.$code.');'
+				'/*'.' PATTERNS */' => '$this->_patterns = '.preg_replace(array("/\n  /", "/\n\)\s*$/"), array("\n\t\t\t\t", "\n\t\t\t);"), var_export($this->_patterns, true)),
 			);
 		}
 	}
