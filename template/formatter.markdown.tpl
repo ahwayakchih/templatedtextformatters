@@ -70,12 +70,12 @@
 			$div->setAttribute('class', 'group');
 
 			$label = Widget::Label();
-			$input = Widget::Input('fields[use_markdownextra]', 'yes', 'checkbox', ($this->_use_markdownextra ? array('checked' => 'checked') : NULL));
+			$input = Widget::Input('fields[use_markdownextra]', 'yes', 'checkbox', ($this->_use_markdownextra == 'yes' ? array('checked' => 'checked') : NULL));
 			$label->setValue(__('%1$s Use <a href="%2$s" target="_blank">MarkdownExtra</a> syntax', array($input->generate(false), 'http://michelf.com/projects/php-markdown/extra/')));
 			$div->appendChild($label);
 
 			$label = Widget::Label();
-			$input = Widget::Input('fields[use_smartypants]', 'yes', 'checkbox', ($this->_use_smartypants ? array('checked' => 'checked') : NULL));
+			$input = Widget::Input('fields[use_smartypants]', 'yes', 'checkbox', ($this->_use_smartypants == 'yes' ? array('checked' => 'checked') : NULL));
 			$label->setValue(__('%1$s Use <a href="%2$s" target="_blank">SmartyPants</a> filter', array($input->generate(false), 'http://michelf.com/projects/php-smartypants/')));
 			$div->appendChild($label);
 
@@ -103,8 +103,8 @@
 		// @return array where each key is a string which will be replaced in this template, and value is what key will be replaced with.
 		function ttf_tokens() {
 			// Reconstruct our current patterns array and description, so they are up-to-date when form is viewed right after save, without refresh/redirect
-			$this->_use_markdownextra = $_POST['fields']['use_markdownextra'];
-			$this->_use_smartypants = $_POST['fields']['use_smartypants'];
+			$this->_use_markdownextra = (isset($_POST['fields']['use_markdownextra']) ? $_POST['fields']['use_markdownextra'] : 'no');
+			$this->_use_smartypants = (isset($_POST['fields']['use_smartypants']) ? $_POST['fields']['use_smartypants'] : 'no');
 			$this->_use_link_class = $_POST['fields']['use_link_class'];
 			$this->_use_backlink_class = $_POST['fields']['use_backlink_class'];
 			$markdown = ($this->_use_markdownextra ? 'MarkdownExtra' : 'Markdown');
