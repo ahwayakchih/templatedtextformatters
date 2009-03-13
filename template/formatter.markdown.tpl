@@ -3,8 +3,8 @@
 	Class formatter/* CLASS NAME */ extends TextFormatter{
 		private $_use_markdownextra;
 		private $_use_smartypants;
-		private $_fn_link_class;
-		private $_fn_backlink_class;
+		private $_use_link_class;
+		private $_use_backlink_class;
 
 		private static $_markdown;
 
