@@ -1,7 +1,7 @@
 <?php
-	Class extension_templatedtextformatters extends Extension{
+	Class extension_templatedtextformatters extends Extension {
 	
-		public function about(){
+		public function about() {
 			return array('name' => __('Templated Text Formatters'),
 						 'version' => '1.4',
 						 'release-date' => '2009-03-13',
@@ -12,30 +12,30 @@
 				 		);
 		}
 
-		function install(){
+		function install() {
 			return General::realiseDirectory(TEXTFORMATTERS, $this->_Parent->Configuration->get('write_mode', 'directory'));
 		}
 
-		function uninstall(){
+		function uninstall() {
 			// TODO: remove all created formatters?
 			return true;
 		}
 
-		function update($previousVersion=false){
+		function update($previousVersion=false) {
 			return $this->install();
 		}
 
-		function enable(){
+		function enable() {
 			return $this->install();
 		}
 
-		public function fetchNavigation(){
+		public function fetchNavigation() {
 			return array(
 				array(
 					'location' => 200,
 					'name' => __('Templated Text Formatters'),
 					'limit'	=> 'developer',
-				)
+				),
 			);
 		}
 
@@ -43,7 +43,7 @@
 			$structure = General::listStructure(TEXTFORMATTERS, '/formatter.ttf_[\\w-]+.php/', false, 'ASC', TEXTFORMATTERS);
 
 			$result = array();
-			if(is_array($structure['filelist']) && !empty($structure['filelist'])){
+			if (is_array($structure['filelist']) && !empty($structure['filelist'])) {
 				foreach ($structure['filelist'] as $f) {
 					$handle = preg_replace(array('/^formatter./i', '/.php$/i'), '', $f);
 					$result[$handle] = array();
@@ -60,10 +60,10 @@
 			$result = array();
 			foreach ($extensions as $e) {
 				$path = EXTENSIONS . "/{$e}/template";
-				if(!is_dir($path)) continue;
+				if (!is_dir($path)) continue;
 
 				$structure = General::listStructure($path, '/^formatter.[\\w-]+.tpl$/', false, 'ASC', $path);
-				if(is_array($structure['filelist']) && !empty($structure['filelist'])){
+				if (is_array($structure['filelist']) && !empty($structure['filelist'])) {
 					foreach ($structure['filelist'] as $t) {
 						$type = preg_replace(array('/^formatter./i', '/.tpl$/i'), '', $t);
 						$result[$type] = array('path' => $path);
@@ -73,6 +73,5 @@
 
 			return $result;
 		}
-
 	}
 

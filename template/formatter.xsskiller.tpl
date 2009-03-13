@@ -1,15 +1,15 @@
 <?php
 
-	Class formatter/* CLASS NAME */ extends TextFormatter{
+	Class formatter/* CLASS NAME */ extends TextFormatter {
 		private $_description;
 
-		function __construct(&$parent){
+		function __construct(&$parent) {
 			parent::__construct($parent);
 
 			$this->_description = '/* DESCRIPTION */';
 		}
 		
-		function about(){
+		function about() {
 			return array(
 				'name' => '/* NAME */', // required
 				'author' => array(
@@ -25,7 +25,7 @@
 			);
 		}
 				
-		function run($val){
+		function run($val) {
 			$val = trim($val);
 			if (strlen($val) < 1) return $val;
 
@@ -107,4 +107,3 @@
 		}
 	}
 
-?>

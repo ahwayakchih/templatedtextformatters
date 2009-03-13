@@ -3,14 +3,14 @@
 	require_once(TOOLKIT . '/class.administrationpage.php');
 	require_once(TOOLKIT . '/class.textformattermanager.php');
 
-	Class contentExtensionTemplatedTextFormattersEdit extends AdministrationPage{
+	Class contentExtensionTemplatedTextFormattersEdit extends AdministrationPage {
 
 		public $formatterManager;
 		public $formatter;
 
 		private $_driver;
 
-		function __construct(&$parent){
+		function __construct(&$parent) {
 			parent::__construct($parent);
 
 			if (!is_object($this->_Parent->FormatterManager)) {
@@ -23,7 +23,7 @@
 			$this->_driver = $this->_Parent->ExtensionManager->create('templatedtextformatters');
 		}
 
-		function view(){
+		function view() {
 			$about = array();
 			if ($this->_context[0] && !is_object($this->formatter)) {
 				$this->formatter = $this->_Parent->FormatterManager->create($this->_context[0]);
@@ -46,7 +46,8 @@
 			$div = new XMLElement('div');
 			$div->setAttribute('class', 'group');
 
-			$label = Widget::Label(__('Name'));		
+			$label = Widget::Label(__('Name'));
+			if (isset($about['name'])) $label->appendChild(new XMLElement('i', __('Changing name makes fields forget about formatter!')));
 			$label->appendChild(Widget::Input('fields[name]', ($fields['name'] ? $fields['name'] : $about['name'])));
 			$div->appendChild((isset($this->_errors['name']) ? $this->wrapFormElementWithError($label, $this->_errors['name']) : $label));
 
@@ -104,7 +105,7 @@
 			$div->setAttribute('class', 'actions');
 			$div->appendChild(Widget::Input('action[save]', ($about['handle'] ? __('Save Changes') : __('Create formatter')), 'submit', array('accesskey' => 's')));
 			
-			if($about['name']){
+			if ($about['name']) {
 				$button = new XMLElement('button', __('Delete'));
 				$button->setAttributeArray(array('name' => 'action[delete]', 'class' => 'confirm delete', 'title' => __('Delete this formatter')));
 				$div->appendChild($button);
@@ -159,16 +160,16 @@
 			$isDuplicate = false;
 			$queueForDeletion = NULL;
 
-			if(!$about['handle'] && @is_file($file)) $isDuplicate = true;
-			elseif($about['handle']){
+			if (!$about['handle'] && @is_file($file)) $isDuplicate = true;
+			else if ($about['handle']) {
 				if($classname != $about['handle'] && @is_file($file)) $isDuplicate = true;
 				elseif($classname != $about['handle']) $queueForDeletion = TEXTFORMATTERS . '/formatter.' . $about['handle'] . '.php';			
 			}
 
-			##Duplicate
-			if($isDuplicate) $this->_errors['name'] = __('Text formatter with the name <code>%s</code> already exists', array($classname));
+			// Duplicate
+			if ($isDuplicate) $this->_errors['name'] = __('Text formatter with the name <code>%s</code> already exists', array($classname));
 
-			if(!empty($this->_errors)){
+			if (!empty($this->_errors)) {
 				return;
 			}
 
@@ -190,15 +191,16 @@
 			$ttfShell = file_get_contents($tplfile);
 			$ttfShell = str_replace(array_keys($tokens), $tokens, $ttfShell);
 
-			##Write the file
-			if(!is_writable(dirname($file)) || !$write = General::writeFile($file, $ttfShell, $this->_Parent->Configuration->get('write_mode', 'file')))
-				$this->pageAlert(__('Failed to write Text Formatter source to <code>%s</code>. Please check permissions.', array(TEXTFORMATTERS)), AdministrationPage::PAGE_ALERT_ERROR);
-			##Write Successful
-			else{
-				if($queueForDeletion || !$about['name']){
+			// Write the file
+			if (!is_writable(dirname($file)) || !$write = General::writeFile($file, $ttfShell, $this->_Parent->Configuration->get('write_mode', 'file'))) {
+				$this->pageAlert(__('Failed to write Text Formatter source to <code>%s</code>. Please check permissions.', array($file)), Alert::ERROR);
+			}
+			// Write Successful
+			else {
+				if ($queueForDeletion || !$about['name']) {
 					if ($queueForDeletion) General::deleteFile($queueForDeletion);
 					
-					### TODO: Find a way to make formatted fields update their content
+					// TODO: Find a way to make formatted fields update their content
 
 					redirect(URL . '/symphony/extension/templatedtextformatters/edit/'.$classname.'/'.($about['name'] ? 'saved' : 'created').'/');
 				}
@@ -210,12 +212,12 @@
 		}
 
 		function delete() {
-			if(!General::deleteFile(TEXTFORMATTERS . '/formatter.' . $this->_context[0] . '.php'))
-				$this->pageAlert(__('Failed to delete <code>%s</code>. Please check permissions.', array($this->_context[0])), AdministrationPage::PAGE_ALERT_ERROR);
+			$file = TEXTFORMATTERS . '/formatter.' . $this->_context[0] . '.php';
+			if (!General::deleteFile($file))
+				$this->pageAlert(__('Failed to delete <code>%s</code>. Please check permissions.', array($file)), Alert::ERROR);
 			else
 				redirect(URL . '/symphony/extension/templatedtextformatters/');
 		}
 
 	}
 
-?>

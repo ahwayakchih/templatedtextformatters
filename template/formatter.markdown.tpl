@@ -1,6 +1,6 @@
 <?php
 
-	Class formatter/* CLASS NAME */ extends TextFormatter{
+	Class formatter/* CLASS NAME */ extends TextFormatter {
 		private $_use_markdownextra;
 		private $_use_smartypants;
 		private $_use_link_class;
@@ -8,7 +8,7 @@
 
 		private static $_markdown;
 
-		function __construct(&$parent){
+		function __construct(&$parent) {
 			parent::__construct($parent);
 
 			$this->_use_markdownextra = '/* USE MARKDOWNEXTRA */';
@@ -17,7 +17,7 @@
 			$this->_use_backlink_class = '/* USE BACKLINK CLASS */';
 		}
 		
-		function about(){
+		function about() {
 			return array(
 				'name' => '/* NAME */', // required
 				'author' => array(
@@ -33,7 +33,7 @@
 			);
 		}
 				
-		function run($string){
+		function run($string) {
 			if (!$string) return $string;
 
 			if (!isset(self::$_markdown)) {
@@ -120,4 +120,3 @@
 		}
 	}
 
-?>

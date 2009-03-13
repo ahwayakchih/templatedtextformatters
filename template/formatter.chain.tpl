@@ -1,9 +1,9 @@
 <?php
 
-	Class formatter/* CLASS NAME */ extends TextFormatter{
+	Class formatter/* CLASS NAME */ extends TextFormatter {
 		private $_formatters;
 
-		function __construct(&$parent){
+		function __construct(&$parent) {
 			parent::__construct($parent);
 
 			/* FORMATTERS */
@@ -13,7 +13,7 @@
 			}
 		}
 		
-		function about(){
+		function about() {
 			return array(
 				'name' => '/* NAME */', // required
 				'author' => array(
@@ -29,7 +29,7 @@
 			);
 		}
 				
-		function run($string){
+		function run($string) {
 			if (strlen(trim($string)) < 1) return $string;
 
 			if (count($this->_formatters) < 1) return stripslashes($string);
@@ -62,7 +62,7 @@
 			$ol = new XMLElement('ol');
 			$ol->setAttribute('class', 'orderable subsection');
 
-			foreach($formatters as $id => $about){
+			foreach ($formatters as $id => $about) {
 				if ($about['handle'] == '/* CLASS NAME */') continue;
 
 				$li = new XMLElement('li');
@@ -138,4 +138,3 @@
 		}
 	}
 
-?>

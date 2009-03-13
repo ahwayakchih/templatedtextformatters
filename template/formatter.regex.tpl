@@ -1,10 +1,10 @@
 <?php
 
-	Class formatter/* CLASS NAME */ extends TextFormatter{
+	Class formatter/* CLASS NAME */ extends TextFormatter {
 		private $_patterns;
 		private $_description;
 
-		function __construct(&$parent){
+		function __construct(&$parent) {
 			parent::__construct($parent);
 
 			/* PATTERNS */
@@ -12,7 +12,7 @@
 			$this->_description = '/* DESCRIPTION */';
 		}
 		
-		function about(){
+		function about() {
 			return array(
 				'name' => '/* NAME */', // required
 				'author' => array(
@@ -28,7 +28,7 @@
 			);
 		}
 				
-		function run($string){
+		function run($string) {
 			if (strlen(trim($string)) < 1) return $string;
 
 			if (count($this->_patterns) < 1) return stripslashes($string);
@@ -101,4 +101,3 @@
 		}
 	}
 
-?>
