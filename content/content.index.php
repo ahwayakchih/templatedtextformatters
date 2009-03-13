@@ -10,19 +10,19 @@
 		function __construct(&$parent){
 			parent::__construct($parent);
 
-			$this->setTitle('Symphony &ndash; Templated Text Formatters');
+			$this->setTitle(__('%1$s &ndash; %2$s', array(__('Symphony'), __('Templated Text Formatters'))));
 
 			$this->_driver = $this->_Parent->ExtensionManager->create('templatedtextformatters');
 		}
 
 		function view(){
 			$this->setPageType('table');
-			$this->appendSubheading('Templated Text Formatters', Widget::Anchor('Create New', '/symphony/extension/templatedtextformatters/edit/', 'Create a new hub', 'create button'));
+			$this->appendSubheading(__('Templated Text Formatters'), Widget::Anchor(__('Create New'), '/symphony/extension/templatedtextformatters/edit/', __('Create a new hub'), 'create button'));
 
 			$aTableHead = array(
-				array('Title', 'col'),
-				array('Type', 'col'),
-				array('Description', 'col')
+				array(__('Title'), 'col'),
+				array(__('Type'), 'col'),
+				array(__('Description'), 'col')
 			);	
 
 			$aTableBody = array();
@@ -55,12 +55,12 @@
 			$div->setAttribute('class', 'actions');
 
 			$options = array(
-				array(NULL, false, 'With Selected...'),
-				array('delete', false, 'Delete')									
+				array(NULL, false, __('With Selected...')),
+				array('delete', false, __('Delete'))
 			);
 
 			$div->appendChild(Widget::Select('with-selected', $options));
-			$div->appendChild(Widget::Input('action[apply]', 'Apply', 'submit'));
+			$div->appendChild(Widget::Input('action[apply]', __('Apply'), 'submit'));
 
 			$this->Form->appendChild($div);
 		}
@@ -78,8 +78,7 @@
 		function delete($id) {
 			$file = TEXTFORMATTERS . '/formatter.' . $id . '.php';
 			if(!General::deleteFile($file))
-				$this->pageAlert('Failed to delete <code>'.$id.'</code>. Please check permissions.', AdministrationPage::PAGE_ALERT_ERROR);
+				$this->pageAlert(__('Failed to delete <code>%s</code>. Please check permissions.', array($id)), AdministrationPage::PAGE_ALERT_ERROR);
 		}
 	}
 
-?>

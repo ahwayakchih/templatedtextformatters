@@ -39,13 +39,13 @@
 		// Hook for driver to call when generating edit form
 		// Add form fields to $form
 		function ttf_form(&$form, &$page) {
-			$label = Widget::Label('Description');
+			$label = Widget::Label(__('Description'));
 			$label->appendChild(Widget::Input('fields[description]', $this->_description ? $this->_description : $fields['description']));
 			$form->appendChild($label);
 
 			$subsection = new XMLElement('div');
 			$subsection->setAttribute('class', 'subsection');
-			$subsection->appendChild(new XMLElement('h3', 'Patterns and replacements'));
+			$subsection->appendChild(new XMLElement('h3', __('Patterns and replacements')));
 
 			$ol = new XMLElement('ol');
 
@@ -59,11 +59,11 @@
 				$div = new XMLElement('div');
 				$div->setAttribute('class', 'group');
 
-				$label = Widget::Label('Pattern');
+				$label = Widget::Label(__('Pattern'));
 				$label->appendChild(Widget::Input('fields[patterns][]', htmlentities($pattern, ENT_QUOTES, 'UTF-8')));
 				$div->appendChild($label);
 
-				$label = Widget::Label('Replacement');
+				$label = Widget::Label(__('Replacement'));
 				$label->appendChild(Widget::Input('fields[replacements][]', htmlentities($replacement, ENT_QUOTES, 'UTF-8')));
 				$div->appendChild($label);
 
@@ -74,7 +74,7 @@
 			$subsection->appendChild($ol);
 			$form->appendChild($subsection);
 
-			$p = new XMLElement('p', 'Wrap patterns with slashes ("/pattern_here/"). You can use backreferences in replacement. Syntax for pattern and replacement is exactly the same as in <a href="http://www.php.net/manual/en/function.preg-replace.php" target="_blank">preg_replace()</a> function in PHP. That is because it is used by this formatter ;).');
+			$p = new XMLElement('p', __('Wrap patterns with slashes, e.g., "/pattern_here/". You can use backreferences in replacement. Syntax for pattern and replacement is exactly the same as in <a href="http://www.php.net/manual/en/function.preg-replace.php" target="_blank">preg_replace()</a> function in PHP.'));
 			$p->setAttribute('class', 'help');
 			$form->appendChild($p);
 		}

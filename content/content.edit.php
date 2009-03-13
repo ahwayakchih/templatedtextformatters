@@ -36,21 +36,21 @@
 			$fields = $_POST['fields'];
 
 			$this->setPageType('form');
-			$this->setTitle('Symphony &ndash; Templated Text Formatters &ndash; '.($fields['name'] ? $fields['name'] : $about['name']));
+			$this->setTitle(__('%1$s &ndash; %2$s &ndash; %3$s', array(__('Symphony'), __('Templated Text Formatters'), ($fields['name'] ? $fields['name'] : $about['name']))));
 			$this->appendSubheading($fields['name'] ? $fields['name'] : ($about['name'] ? $about['name'] : 'Untitled'));
 
 			$fieldset = new XMLElement('fieldset');
 			$fieldset->setAttribute('class', 'settings');
-			$fieldset->appendChild(new XMLElement('legend', 'Essentials'));
+			$fieldset->appendChild(new XMLElement('legend', __('Essentials')));
 
 			$div = new XMLElement('div');
 			$div->setAttribute('class', 'group');
 
-			$label = Widget::Label('Name');		
+			$label = Widget::Label(__('Name'));		
 			$label->appendChild(Widget::Input('fields[name]', ($fields['name'] ? $fields['name'] : $about['name'])));
 			$div->appendChild((isset($this->_errors['name']) ? $this->wrapFormElementWithError($label, $this->_errors['name']) : $label));
 
-			$label = Widget::Label('Type');
+			$label = Widget::Label(__('Type'));
 
 			$types = $this->_driver->listTypes();
 			$options = array();
@@ -77,20 +77,20 @@
 			if (is_object($this->formatter)) {
 				$fieldset = new XMLElement('fieldset');
 				$fieldset->setAttribute('class', 'settings');
-				$fieldset->appendChild(new XMLElement('legend', 'Testing grounds'));
+				$fieldset->appendChild(new XMLElement('legend', __('Testing grounds')));
 
-				$p = new XMLElement('p', 'For now, You have to save changes each time You want to see updated output');
+				$p = new XMLElement('p', __('For now, You have to save changes each time You want to see updated output'));
 				$p->setAttribute('class', 'help');
 				$fieldset->appendChild($p);
 
 				$div = new XMLElement('div');
 				$div->setAttribute('class', 'group');
 
-				$label = Widget::Label('Test input');
+				$label = Widget::Label(__('Test input'));
 				$label->appendChild(Widget::Textarea('fields[testin]', 5, 50, $fields['testin']));
 				$div->appendChild($label);
 
-				$label = Widget::Label('Test output');
+				$label = Widget::Label(__('Test output'));
 				$temp = '';
 				if ($fields['testin']) $temp = $this->formatter->run($fields['testin']);
 				$label->appendChild(Widget::Textarea('fields[testout]', 5, 50, $temp));
@@ -102,11 +102,11 @@
 
 			$div = new XMLElement('div');
 			$div->setAttribute('class', 'actions');
-			$div->appendChild(Widget::Input('action[save]', ($about['handle'] ? 'Save Changes' : 'Create formatter'), 'submit', array('accesskey' => 's')));
+			$div->appendChild(Widget::Input('action[save]', ($about['handle'] ? __('Save Changes') : __('Create formatter')), 'submit', array('accesskey' => 's')));
 			
 			if($about['name']){
-				$button = new XMLElement('button', 'Delete');
-				$button->setAttributeArray(array('name' => 'action[delete]', 'class' => 'confirm delete', 'title' => 'Delete this formatter'));
+				$button = new XMLElement('button', __('Delete'));
+				$button->setAttributeArray(array('name' => 'action[delete]', 'class' => 'confirm delete', 'title' => __('Delete this formatter')));
 				$div->appendChild($button);
 			}
 
@@ -133,23 +133,23 @@
 			$types = $this->_driver->listTypes();
 
 			if (strlen(trim($fields['name'])) < 1) {
-				$this->_errors['name'] = 'You have to specify name for text formatter';
+				$this->_errors['name'] = __('You have to specify name for text formatter');
 				return;
 			}
 
 			if ($about['templatedtextformatters-type'] && $about['templatedtextformatters-type'] != $fields['type']) {
-				$this->_errors['type'] = 'Changing type of already existing formatter is not allowed';
+				$this->_errors['type'] = __('Changing type of already existing formatter is not allowed');
 				return;
 			}
 
 			if (!$fields['type'] || !is_array($types[$fields['type']]) || !isset($types[$fields['type']]['path'])) {
-				$this->_errors['type'] = 'There is no '.$fields['type'].' type available';
+				$this->_errors['type'] = __('There is no <code>%s</code> type available', array($fields['type']));
 				return;
 			}
 
 			$tplfile = $types[$fields['type']]['path'].'/formatter.'.$fields['type'].'.tpl';
 			if (!@is_file($tplfile)) {
-				$this->_errors['type'] = 'Wrong type of text formatter';
+				$this->_errors['type'] = __('Wrong type of text formatter');
 				return;
 			}
 
@@ -166,7 +166,7 @@
 			}
 
 			##Duplicate
-			if($isDuplicate) $this->_errors['name'] = 'Text formatter with the name <code>'.$classname.'</code> already exists';
+			if($isDuplicate) $this->_errors['name'] = __('Text formatter with the name <code>%s</code> already exists', array($classname));
 
 			if(!empty($this->_errors)){
 				return;
@@ -192,7 +192,7 @@
 
 			##Write the file
 			if(!is_writable(dirname($file)) || !$write = General::writeFile($file, $ttfShell, $this->_Parent->Configuration->get('write_mode', 'file')))
-				$this->pageAlert('Failed to write Text Formatter source to <code>'.TEXTFORMATTERS.'</code>. Please check permissions.', AdministrationPage::PAGE_ALERT_ERROR);
+				$this->pageAlert(__('Failed to write Text Formatter source to <code>%s</code>. Please check permissions.', array(TEXTFORMATTERS)), AdministrationPage::PAGE_ALERT_ERROR);
 			##Write Successful
 			else{
 				if($queueForDeletion || !$about['name']){
@@ -211,7 +211,7 @@
 
 		function delete() {
 			if(!General::deleteFile(TEXTFORMATTERS . '/formatter.' . $this->_context[0] . '.php'))
-				$this->pageAlert('Failed to delete <code>'.$this->_context[0].'</code>. Please check permissions.', AdministrationPage::PAGE_ALERT_ERROR);
+				$this->pageAlert(__('Failed to delete <code>%s</code>. Please check permissions.', array($this->_context[0])), AdministrationPage::PAGE_ALERT_ERROR);
 			else
 				redirect(URL . '/symphony/extension/templatedtextformatters/');
 		}

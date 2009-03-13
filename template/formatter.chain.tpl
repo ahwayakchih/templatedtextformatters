@@ -57,7 +57,7 @@
 
 			$subsection = new XMLElement('div');
 			$subsection->setAttribute('class', 'subsection');
-			$subsection->appendChild(new XMLElement('h3', 'Text formatters'));
+			$subsection->appendChild(new XMLElement('h3', __('Text formatters')));
 
 			$ol = new XMLElement('ol');
 			$ol->setAttribute('class', 'orderable subsection');
@@ -71,7 +71,7 @@
 				$h4 = new XMLElement('h4', $about['name']);
 				if ($about['templatedtextformatters-type']) {
 					$i = new XMLElement('i');
-					$i->appendChild(Widget::Anchor('Edit', URL.'/symphony/extension/templatedtextformatters/edit/'.$about['handle'], 'Edit this formatter'));
+					$i->appendChild(Widget::Anchor(__('Edit'), URL.'/symphony/extension/templatedtextformatters/edit/'.$about['handle'], __('Edit this formatter')));
 					$h4->appendChild($i);
 				}
 				$li->appendChild($h4);
@@ -88,7 +88,7 @@
 					$h4 = new XMLElement('h4', $about['name']);
 					if ($about['templatedtextformatters-type']) {
 						$i = new XMLElement('i');
-						$i->appendChild(Widget::Anchor('Edit', URL.'/symphony/extension/templatedtextformatters/edit/'.$about['handle'], 'Edit this formatter'));
+						$i->appendChild(Widget::Anchor(__('Edit'), URL.'/symphony/extension/templatedtextformatters/edit/'.$about['handle'], __('Edit this formatter')));
 						$h4->appendChild($i);
 					}
 					$li->appendChild($h4);
@@ -104,7 +104,7 @@
 			$subsection->appendChild($ol);
 			$form->appendChild($subsection);
 
-			$p = new XMLElement('p', 'Formatters will be applied in order from top to bottom.');
+			$p = new XMLElement('p', __('Formatters will be applied in order from top to bottom.'));
 			$p->setAttribute('class', 'help');
 			$form->appendChild($p);
 		}
@@ -125,10 +125,10 @@
 						$code .= '\''.$id.'\' => \''.preg_replace('/[^\w\s\.-_\&\;\#]/i', '', $this->_formatters[$id]).'\',';
 					}
 				}
-				$description = 'Formatting text in following order: '.implode(' &#8594; ', $this->_formatters);
+				$description = __('Formatting text in following order: %s', array(implode(' &#8594; ', $this->_formatters)));
 			}
 			else {
-				$description = 'None';
+				$description = __('None');
 			}
 
 			return array(

@@ -83,7 +83,7 @@
 				}
 			}
 
-			// TODO: escape/remove href values like: href="attack();" will be executed even though there is no "javascript:" part there.
+			// TODO: escape/remove href values like: href="attack();" because they will be executed even though there is no "javascript:" part there.
 
 			return $val;
 		}
@@ -91,7 +91,7 @@
 		// Hook for driver to call when generating edit form
 		// Add form fields to $form
 		function ttf_form(&$form, &$page) {
-			$label = Widget::Label('Description');
+			$label = Widget::Label(__('Description'));
 			$label->appendChild(Widget::Input('fields[description]', $this->_description ? $this->_description : $fields['description']));
 			$form->appendChild($label);
 		}

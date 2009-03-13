@@ -2,13 +2,13 @@
 	Class extension_templatedtextformatters extends Extension{
 	
 		public function about(){
-			return array('name' => 'Templated Text Formatters',
+			return array('name' => __('Templated Text Formatters'),
 						 'version' => '1.3',
 						 'release-date' => '2009-01-08',
 						 'author' => array('name' => 'Marcin Konicki',
 										   'website' => 'http://ahwayakchih.neoni.net',
 										   'email' => 'ahwayakchih@neoni.net'),
-						 'description' => 'Allows to chain text formatters into one text formatter or crate new text formatters based on installed templates. For example You can chain Markdown and BBCode text formatters, so text will be formatted by Markdown first and than by BBCode.'
+						 'description' => __('Allows to chain text formatters into one text formatter or crate new text formatters based on installed templates. For example You can chain Markdown and BBCode text formatters, so text will be formatted by Markdown first and than by BBCode.')
 				 		);
 		}
 
@@ -33,7 +33,7 @@
 			return array(
 				array(
 					'location' => 200,
-					'name' => 'Templated Text Formatters',
+					'name' => __('Templated Text Formatters'),
 					'limit'		=> 'developer',
 				)
 			);
@@ -59,7 +59,7 @@
 
 			$result = array();
 			foreach ($extensions as $e) {
-				$path = EXTENSIONS . "/$e/template";
+				$path = EXTENSIONS . "/{$e}/template";
 				if(!is_dir($path)) continue;
 
 				$structure = General::listStructure($path, '/^formatter.[\\w-]+.tpl$/', false, 'ASC', $path);
