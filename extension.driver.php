@@ -1,4 +1,5 @@
 <?php
+
 	Class extension_templatedtextformatters extends Extension {
 	
 		public function about() {
@@ -103,19 +104,21 @@
 			$aboutDriver = $this->about();
 
 			foreach (array_keys($types) as $type) {
-				$types[$type]['code'] = file_get_contents($types[$type]['path'].'/formatter.'.$type.'.php');
+				$types[$type]['code'] = file_get_contents($types[$type]['path'].'/formatter.'.$type.'.tpl');
 				if (preg_match('/public\s*function\s*ttf_tokens\s*\([^\)]*\)\s*(\{(?:[^\{\}]+|(?1))*\})/', $types[$type]['code'], $m)) {
 					$types[$type]['ttf_tokens_code'] = $m[0];
 				}
 			}
 
+			include_once(TOOLKIT . '/class.textformattermanager.php');
 			foreach ($formatters as $id => $dummy) {
 				$file = TEXTFORMATTERS . "/formatter.{$id}.php";
 				$data = file_get_contents($file);
+
 				if (!preg_match('/public\s*function\s*ttf_tokens\s*\([^\)]*\)\s*(\{(?:[^\{\}]+|(?1))*\})/', $data, $m)) continue;
 
 				$code = $m[0];
-				if (!preg_match('/\'templatedtextformatters-type\'\s*=>\s*\'([^\']+)\'\s*,/', $data, $m)) continue;
+				if (!preg_match('/\'templatedtextformatters-type\'\s*=>\s*\'([^\']+)\'/', $data, $m)) continue;
 
 				$type = $m[1];
 				if (!$types[$type] || !$types[$type]['ttf_tokens_code']) continue;

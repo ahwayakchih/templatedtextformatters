@@ -1,4 +1,5 @@
 <?php
+	include_once(TOOLKIT . '/class.textformattermanager.php');
 
 	// Template class name must be constructed as: formatter___[type]/* CLASS NAME */
 	// where [type] is name of type of formatter, e.g., "markdown", "chain", etc...
