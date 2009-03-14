@@ -130,13 +130,13 @@
 					$this->_formatters = array_intersect_key($_POST['fields']['formatters'], $formatters);
 					$description = implode(' &#8594; ', $this->_formatters);
 				}
-				else {
-					$description = __('N/A');
-				}
 			}
-			else {
-				$description = $this->about();
-				$description = $description['description'];
+			else if (is_array($this->_formatters) && !empty($this->_formatters)) {
+				$description = implode(' &#8594; ', $this->_formatters);
+			}
+
+			if (!$description) {
+				$description = __('N/A');
 			}
 
 			return array(
