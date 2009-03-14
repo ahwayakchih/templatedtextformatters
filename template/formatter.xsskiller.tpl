@@ -1,6 +1,11 @@
 <?php
 
-	Class formatter/* CLASS NAME */ extends TextFormatter {
+	// Template class name must be constructed as: formatter___[type]/* CLASS NAME */
+	// where [type] is name of type of formatter, e.g., "markdown", "chain", etc...
+	// That way editor can use it at the same time as other templated formatters and 
+	// formatters generated from them.
+	// When saving, ___[type]/* CLASS NAME */ will be replaced by class name entered in editor.
+	Class formatter___xsskiller/* CLASS NAME */ extends TextFormatter {
 
 		private $_description;
 
@@ -97,10 +102,13 @@
 			$form->appendChild($label);
 		}
 
-		// Hook called by TemplatedTextFormatters when saving formatter
+		// Hook called by TemplatedTextFormatters when generating formatter
+		// Update internal data from $_POST only when $update == true.
 		// @return array where each key is a string which will be replaced in this template, and value is what key will be replaced with.
-		public function ttf_tokens() {
-			$this->_description = str_replace(array('\'', '"'), array('&#039;', '&quot;'), $_POST['fields']['description']);
+		public function ttf_tokens($update = true) {
+			if ($update) {
+				$this->_description = str_replace(array('\'', '"'), array('&#039;', '&quot;'), $_POST['fields']['description']);
+			}
 
 			return array(
 				'/*'.' DESCRIPTION */' => $this->_description,

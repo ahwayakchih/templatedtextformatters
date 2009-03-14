@@ -1,7 +1,11 @@
 <?php
-	ini_set("display_errors","2");
-	ERROR_REPORTING(E_ALL);
-	Class formatter/* CLASS NAME */ extends TextFormatter {
+
+	// Template class name must be constructed as: formatter___[type]/* CLASS NAME */
+	// where [type] is name of type of formatter, e.g., "markdown", "chain", etc...
+	// That way editor can use it at the same time as other templated formatters and 
+	// formatters generated from them.
+	// When saving, ___[type]/* CLASS NAME */ will be replaced by class name entered in editor.
+	Class formatter___chain/* CLASS NAME */ extends TextFormatter {
 
 		private $_formatters;
 
@@ -111,21 +115,27 @@
 			$form->appendChild($p);
 		}
 
-		// Hook called by TemplatedTextFormatters when saving formatter
+		// Hook called by TemplatedTextFormatters when generating formatter
+		// Update internal data from $_POST only when $update == true.
 		// @return array where each key is a string which will be replaced in this template, and value is what key will be replaced with.
-		public function ttf_tokens() {
-			$formatters = $this->_Parent->FormatterManager->listAll();
-
+		public function ttf_tokens($update = true) {
 			$description = '';
-			$code = '';
-			// Reconstruct our current formatters array, so it's up-to-date when form is viewed right after save, without refresh/redirect
-			$this->_formatters = array();
-			if (is_array($_POST['fields']['formatters'])) {
-				$this->_formatters = array_intersect_key($_POST['fields']['formatters'], $formatters);
-				$description = __('Formatting text in following order: %s', array(implode(' &#8594; ', $this->_formatters)));
+			if ($update) {
+				$formatters = $this->_Parent->FormatterManager->listAll();
+
+				// Reconstruct our current formatters array, so it's up-to-date when form is viewed right after save, without refresh/redirect
+				$this->_formatters = array();
+				if (is_array($_POST['fields']['formatters'])) {
+					$this->_formatters = array_intersect_key($_POST['fields']['formatters'], $formatters);
+					$description = __('Formatting text in following order: %s', array(implode(' &#8594; ', $this->_formatters)));
+				}
+				else {
+					$description = __('None');
+				}
 			}
 			else {
-				$description = __('None');
+				$description = $this->about();
+				$description = $description['description'];
 			}
 
 			return array(

@@ -174,7 +174,7 @@
 			}
 
 			$tokens = array(
-				'/* CLASS NAME */' => $classname,
+				'___'.$fields['type'].'/* CLASS NAME */' => $classname,
 				'/* NAME */' => preg_replace('/[^\w\s\.-_\&\;]/i', '', trim($fields['name'])),
 				'/* AUTHOR NAME */' => $this->_Parent->Author->getFullName(),
 				'/* AUTHOR WEBSITE */' => URL,
@@ -189,7 +189,8 @@
 			}
 			else {
 				include_once($tplfile);
-				$temp = new formatter($this->_Parent);
+				$temp = 'formatter___'.$fields['type'];
+				$temp = new $temp($this->_Parent);
 				$tokens = array_merge($tokens, $temp->ttf_tokens());
 			}
 

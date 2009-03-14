@@ -1,6 +1,11 @@
 <?php
 
-	Class formatter/* CLASS NAME */ extends TextFormatter {
+	// Template class name must be constructed as: formatter___[type]/* CLASS NAME */
+	// where [type] is name of type of formatter, e.g., "markdown", "chain", etc...
+	// That way editor can use it at the same time as other templated formatters and 
+	// formatters generated from them.
+	// When saving, ___[type]/* CLASS NAME */ will be replaced by class name entered in editor.
+	Class formatter___markdown/* CLASS NAME */ extends TextFormatter {
 
 		private $_use_markdownextra;
 		private $_use_smartypants;
@@ -100,19 +105,23 @@
 			$form->appendChild($div);
 		}
 
-		// Hook called by TemplatedTextFormatters when saving formatter
+		// Hook called by TemplatedTextFormatters when generating formatter
+		// Update internal data from $_POST only when $update == true.
 		// @return array where each key is a string which will be replaced in this template, and value is what key will be replaced with.
-		public function ttf_tokens() {
-			// Reconstruct our current patterns array and description, so they are up-to-date when form is viewed right after save, without refresh/redirect
-			$this->_use_markdownextra = (isset($_POST['fields']['use_markdownextra']) ? $_POST['fields']['use_markdownextra'] : 'no');
-			$this->_use_smartypants = (isset($_POST['fields']['use_smartypants']) ? $_POST['fields']['use_smartypants'] : 'no');
-			$this->_use_link_class = $_POST['fields']['use_link_class'];
-			$this->_use_backlink_class = $_POST['fields']['use_backlink_class'];
+		public function ttf_tokens($update = true) {
+			if ($update) {
+				// Reconstruct our current patterns array and description, so they are up-to-date when form is viewed right after save, without refresh/redirect
+				$this->_use_markdownextra = (isset($_POST['fields']['use_markdownextra']) ? $_POST['fields']['use_markdownextra'] : 'no');
+				$this->_use_smartypants = (isset($_POST['fields']['use_smartypants']) ? $_POST['fields']['use_smartypants'] : 'no');
+				$this->_use_link_class = $_POST['fields']['use_link_class'];
+				$this->_use_backlink_class = $_POST['fields']['use_backlink_class'];
+			}
+
 			$markdown = ($this->_use_markdownextra ? 'MarkdownExtra' : 'Markdown');
-			$this->_description = ($this->_use_smartypants ? __('%1$s with %2$s', array($markdown, 'SmartyPants')) : __('%1$s', array($markdown)));
+			$description = ($this->_use_smartypants ? __('%1$s with %2$s', array($markdown, 'SmartyPants')) : __('%1$s', array($markdown)));
 
 			return array(
-				'/*'.' DESCRIPTION */' => $this->_description,
+				'/*'.' DESCRIPTION */' => $description,
 				'/*'.' USE MARKDOWNEXTRA */' => $this->_use_markdownextra,
 				'/*'.' USE SMARTYPANTS */' => $this->_use_smartypants,
 				'/*'.' USE LINK CLASS */' => $this->_use_link_class,
