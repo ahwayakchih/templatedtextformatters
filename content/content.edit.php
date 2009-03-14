@@ -196,6 +196,7 @@
 
 			$ttfShell = file_get_contents($tplfile);
 			$ttfShell = str_replace(array_keys($tokens), $tokens, $ttfShell);
+			$ttfShell = str_replace('/* CLASS NAME */', $classname, $ttfShell);
 
 			// Write the file
 			if (!is_writable(dirname($file)) || !$write = General::writeFile($file, $ttfShell, $this->_Parent->Configuration->get('write_mode', 'file'))) {

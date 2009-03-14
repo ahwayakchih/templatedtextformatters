@@ -147,6 +147,7 @@
 				}
 
 				$code = str_replace(array_keys($tokens), $tokens, $types[$type]['code']);
+				$code = str_replace('/* CLASS NAME */', $classname, $code);
 				General::writeFile($file, $code, $this->_Parent->Configuration->get('write_mode', 'file'));
 			}
 		}
