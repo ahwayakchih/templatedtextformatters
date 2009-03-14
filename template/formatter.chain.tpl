@@ -29,7 +29,7 @@
 				),
 				'version' => '1.3',
 				'release-date' => '/* RELEASE DATE */',
-				'description' => '/* DESCRIPTION */',
+				'description' => __('Formatting text in the following order: %s', array('/* DESCRIPTION */')),
 				'templatedtextformatters-version' => '/* TEMPLATEDTEXTFORMATTERS VERSION */', // required
 				'templatedtextformatters-type' => '/* TEMPLATEDTEXTFORMATTERS TYPE */' // required
 			);
@@ -127,10 +127,10 @@
 				$this->_formatters = array();
 				if (is_array($_POST['fields']['formatters'])) {
 					$this->_formatters = array_intersect_key($_POST['fields']['formatters'], $formatters);
-					$description = __('Formatting text in following order: %s', array(implode(' &#8594; ', $this->_formatters)));
+					$description = implode(' &#8594; ', $this->_formatters);
 				}
 				else {
-					$description = __('None');
+					$description = __('N/A');
 				}
 			}
 			else {
