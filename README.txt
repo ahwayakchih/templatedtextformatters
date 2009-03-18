@@ -4,7 +4,7 @@ Templated Text Formatters
 
 Version: 1.4
 Author: Marcin Konicki (http://ahwayakchih.neoni.net)
-Build Date: 13 March 2009
+Build Date: 18 March 2009
 Requirements: Symphony 2.0.2 or greater.
 
 
