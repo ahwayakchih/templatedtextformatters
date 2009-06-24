@@ -45,7 +45,7 @@
 		public function fetchNavigation() {
 			return array(
 				array(
-					'location' => 200,
+					'location' => __('Blueprints'),
 					'name' => __('Templated Text Formatters'),
 					'limit'	=> 'developer',
 				),
