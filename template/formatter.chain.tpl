@@ -64,16 +64,19 @@
 
 			$subsection = new XMLElement('div');
 			$subsection->setAttribute('class', 'subsection');
-			$subsection->appendChild(new XMLElement('h3', __('Text formatters')));
+			$p = new XMLElement('p', __('Text formatters'));
+			$p->setAttribute('class', 'label');
+			$subsection->appendChild($p);
 
 			$ol = new XMLElement('ol');
+			$ol->setAttribute('id', 'fields-duplicator');
 			$ol->setAttribute('class', 'orderable subsection');
 
 			foreach ($formatters as $id => $about) {
 				if ($about['handle'] == '/* CLASS NAME */') continue;
 
 				$li = new XMLElement('li');
-				$li->setAttribute('class', 'unique template');
+				$li->setAttribute('class', 'unique template field-'.$about['handle']);
 
 				$h4 = new XMLElement('h4', $about['name']);
 				if ($about['templatedtextformatters-type']) {
@@ -91,6 +94,7 @@
 
 				if ($this->_formatters[$id]) {
 					$li = new XMLElement('li');
+					$li->setAttribute('class', 'field-'.$about['handle']);
 
 					$h4 = new XMLElement('h4', $about['name']);
 					if ($about['templatedtextformatters-type']) {
