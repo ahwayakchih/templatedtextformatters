@@ -52,16 +52,19 @@
 
 			$subsection = new XMLElement('div');
 			$subsection->setAttribute('class', 'subsection');
-			$subsection->appendChild(new XMLElement('h3', __('Patterns and replacements')));
+			$p = new XMLElement('p', __('Patterns and replacements'));
+			$p->setAttribute('class', 'label');
+			$subsection->appendChild($p);
 
 			$ol = new XMLElement('ol');
+			$ol->setAttribute('id', 'fields-duplicator');
 
 			$temp = $this->_patterns;
 			$temp[''] = '';
 			foreach ($temp as $pattern => $replacement) {
 				$li = new XMLElement('li');
-				$li->setAttribute('class', ($pattern ? 'unique' : ' template'));
-				$li->appendChild(new XMLElement('h4', '#'));
+				$li->setAttribute('class', ($pattern ? 'unique field-regex' : ' template field-regex'));
+				$li->appendChild(new XMLElement('h4', __('Replace')));
 
 				$div = new XMLElement('div');
 				$div->setAttribute('class', 'group');
