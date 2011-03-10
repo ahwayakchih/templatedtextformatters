@@ -48,7 +48,7 @@
 				}
 			}
 
-			$table = Widget::Table(Widget::TableHead($aTableHead), NULL, Widget::TableBody($aTableBody));
+			$table = Widget::Table(Widget::TableHead($aTableHead), NULL, Widget::TableBody($aTableBody), 'selectable');
 			$this->Form->appendChild($table);
 
 			$div = new XMLElement('div');
