@@ -17,7 +17,7 @@
 			$result = true;
 
 			if (!file_exists(TEXTFORMATTERS)) {
-				$result = General::realiseDirectory(TEXTFORMATTERS, $this->_Parent->Configuration->get('write_mode', 'directory'));
+				$result = General::realiseDirectory(TEXTFORMATTERS, Symphony::Configuration()->get('write_mode', 'directory'));
 			}
 
 			return $result;
@@ -70,7 +70,7 @@
 			static $result;
 			if (is_array($result)) return $result;
 
-			$extensions = $this->_Parent->ExtensionManager->listInstalledHandles();
+			$extensions = Symphony::ExtensionManager()->listInstalledHandles();
 			if (!is_array($extensions) || empty($extensions)) return array();
 
 			$result = array();
@@ -124,7 +124,7 @@
 				if (!$types[$type] || !$types[$type]['ttf_tokens_code']) continue;
 
 				$data = str_replace($code, $types[$type]['ttf_tokens_code'], $data);
-				if (!General::writeFile($file, $data, $this->_Parent->Configuration->get('write_mode', 'file'))) continue;
+				if (!General::writeFile($file, $data, Symphony::Configuration()->get('write_mode', 'file'))) continue;
 
 				include_once($file);
 				$classname = "formatter{$id}";
@@ -148,7 +148,7 @@
 
 				$code = str_replace(array_keys($tokens), $tokens, $types[$type]['code']);
 				$code = str_replace('/* CLASS NAME */', $classname, $code);
-				General::writeFile($file, $code, $this->_Parent->Configuration->get('write_mode', 'file'));
+				General::writeFile($file, $code, Symphony::Configuration()->get('write_mode', 'file'));
 			}
 		}
 	}
