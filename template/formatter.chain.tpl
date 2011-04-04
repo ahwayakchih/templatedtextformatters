@@ -58,7 +58,7 @@
 			// Make formatters from $this->_formatters to be first and keep their order
 			$temp = array();
 			foreach ($this->_formatters as $id => $name) {
-				$temp[$id] = $formaters[$id];
+				$temp[$id] = $formatters[$id];
 			}
 			$formatters = array_merge($temp, $formatters);
 
