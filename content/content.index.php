@@ -17,7 +17,7 @@
 
 		public function view() {
 			$this->setPageType('table');
-			$this->appendSubheading(__('Templated Text Formatters'), Widget::Anchor(__('Create New'), URL.'/symphony/extension/templatedtextformatters/edit/', __('Create a new hub'), 'create button'));
+			$this->appendSubheading(__('Templated Text Formatters'), Widget::Anchor(__('Create New'), URL.'/symphony/extension/templatedtextformatters/edit/', __('Create new formatter'), 'create button'));
 
 			$aTableHead = array(
 				array(__('Title'), 'col'),
