@@ -194,11 +194,6 @@
 				return;
 			}
 
-			$description = trim($fields['description']);
-			if (empty($description)) {
-				$description = __('N/A');
-			}
-
 			$tplfile = $types[$fields['type']]['path'].'/formatter.'.$fields['type'].'.tpl';
 			if (!@is_file($tplfile)) {
 				$this->_errors['type'] = __('Wrong type of text formatter');
@@ -222,6 +217,11 @@
 
 			if (!empty($this->_errors)) {
 				return;
+			}
+
+			$description = trim($fields['description']);
+			if (empty($description)) {
+				$description = __('N/A');
 			}
 
 			$tokens = array(
