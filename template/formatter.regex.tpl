@@ -47,7 +47,7 @@
 		// Add form fields to $form
 		public function ttf_form(&$form, &$page) {
 			$label = Widget::Label(__('Description'));
-			$label->appendChild(Widget::Input('fields[description]', $this->_description ? $this->_description : $fields['description']));
+			$label->appendChild(Widget::Input('fields[description]', $this->_description ? $this->_description : $_POST['fields']['description']));
 			$form->appendChild($label);
 
 			$subsection = new XMLElement('div');
