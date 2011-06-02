@@ -4,12 +4,12 @@
 	
 		public function about() {
 			return array('name' => __('Templated Text Formatters'),
-						 'version' => '1.5',
-						 'release-date' => '2009-06-25',
+						 'version' => '1.6',
+						 'release-date' => '2011-06-02',
 						 'author' => array('name' => 'Marcin Konicki',
 										   'website' => 'http://ahwayakchih.neoni.net',
 										   'email' => 'ahwayakchih@neoni.net'),
-						 'description' => __('Allows to chain text formatters into one text formatter and/or create new text formatters based on installed templates. For example You can chain Markdown and BBCode text formatters, so text will be formatted by Markdown first and than by BBCode.')
+						 'description' => __('Allows to chain text formatters into as if they were one text formatter and/or create new text formatters based on installed templates. For example You can chain Markdown and BBCode text formatters, so text will be formatted by Markdown first and than by BBCode.')
 				 		);
 		}
 
