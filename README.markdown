@@ -1,9 +1,9 @@
 # Templated Text Formatters
 
-- Version: 1.5
+- Version: 1.6
 - Author: Marcin Konicki (http://ahwayakchih.neoni.net)
-- Build Date: 25 June 2009
-- Requirements: Symphony 2.0.3 or greater.
+- Build Date: 02 June 2011
+- Requirements: Symphony 2.2 or greater.
 
 
 ## Installation
