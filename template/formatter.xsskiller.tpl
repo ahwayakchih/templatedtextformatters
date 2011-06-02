@@ -8,12 +8,8 @@
 	// When saving, ___[type]/* CLASS NAME */ will be replaced by class name entered in editor.
 	Class formatter___xsskiller/* CLASS NAME */ extends TextFormatter {
 
-		private $_description;
-
 		public function __construct(&$parent) {
 			parent::__construct($parent);
-
-			$this->_description = '/* DESCRIPTION */';
 		}
 		
 		public function about() {
@@ -94,26 +90,18 @@
 
 			return $val;
 		}
-
+/*
 		// Hook for driver to call when generating edit form
 		// Add form fields to $form
 		public function ttf_form(&$form, &$page) {
-			$label = Widget::Label(__('Description'));
-			$label->appendChild(Widget::Input('fields[description]', $this->_description ? $this->_description : $fields['description']));
-			$form->appendChild($label);
 		}
 
 		// Hook called by TemplatedTextFormatters when generating formatter
 		// Update internal data from $_POST only when $update == true.
 		// @return array where each key is a string which will be replaced in this template, and value is what key will be replaced with.
 		public function ttf_tokens($update = true) {
-			if ($update) {
-				$this->_description = str_replace(array('\'', '"'), array('&#039;', '&quot;'), $_POST['fields']['description']);
-			}
-
-			return array(
-				'/*'.' DESCRIPTION */' => $this->_description,
-			);
+			return array();
 		}
+*/
 	}
 

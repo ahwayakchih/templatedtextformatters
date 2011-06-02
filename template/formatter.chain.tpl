@@ -30,7 +30,7 @@
 				),
 				'version' => '1.3',
 				'release-date' => '/* RELEASE DATE */',
-				'description' => __('Formatting text in the following order: %s', array('/* DESCRIPTION */')),
+				'description' => '/* DESCRIPTION */',
 				'templatedtextformatters-version' => '/* TEMPLATEDTEXTFORMATTERS VERSION */', // required
 				'templatedtextformatters-type' => '/* TEMPLATEDTEXTFORMATTERS TYPE */' // required
 			);
@@ -132,19 +132,22 @@
 				$this->_formatters = array();
 				if (is_array($_POST['fields']['formatters'])) {
 					$this->_formatters = array_intersect_key($_POST['fields']['formatters'], $formatters);
-					$description = implode(' &#8594; ', $this->_formatters);
+					$description = implode(' → ', $this->_formatters);
 				}
 			}
 			else if (is_array($this->_formatters) && !empty($this->_formatters)) {
-				$description = implode(' &#8594; ', $this->_formatters);
+				$description = implode(' → ', $this->_formatters);
 			}
 
-			if (!$description) {
+			if (empty($description)) {
 				$description = __('N/A');
+			}
+			else {
+				$description = __('Formatting file in the following order: %s', array($description));
 			}
 
 			return array(
-				'/*'.' DESCRIPTION */' => preg_replace('/[^\w\s\.-_\&\;\#\n]/i', '', $description),
+				'/*'.' DESCRIPTION */' => preg_replace('/^\'|\'$/', '', var_export($description, true)),
 				'/*'.' FORMATTERS */' => '$this->_formatters = '.preg_replace(array("/\n  /", "/\n\)\s*$/"), array("\n\t\t\t\t", "\n\t\t\t);"), var_export($this->_formatters, true)),
 			);
 		}

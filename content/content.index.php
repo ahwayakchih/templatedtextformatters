@@ -39,7 +39,7 @@
 
 					$td1 = Widget::TableData(Widget::Anchor($about['name'], URL."/symphony/extension/templatedtextformatters/edit/{$id}/", $about['name']));
 					$td2 = Widget::TableData($about['templatedtextformatters-type']);
-					$td3 = Widget::TableData($about['description']);
+					$td3 = Widget::TableData(General::sanitize($about['description']));
 
 					$td1->appendChild(Widget::Input('items['.$id.']', NULL, 'checkbox'));
 

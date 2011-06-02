@@ -9,14 +9,11 @@
 	Class formatter___regex/* CLASS NAME */ extends TextFormatter {
 
 		private $_patterns;
-		private $_description;
 
 		public function __construct(&$parent) {
 			parent::__construct($parent);
 
 			/* PATTERNS */
-
-			$this->_description = '/* DESCRIPTION */';
 		}
 		
 		public function about() {
@@ -46,10 +43,6 @@
 		// Hook for driver to call when generating edit form
 		// Add form fields to $form
 		public function ttf_form(&$form, &$page) {
-			$label = Widget::Label(__('Description'));
-			$label->appendChild(Widget::Input('fields[description]', $this->_description ? $this->_description : $_POST['fields']['description']));
-			$form->appendChild($label);
-
 			$subsection = new XMLElement('div');
 			$subsection->setAttribute('class', 'subsection');
 			$p = new XMLElement('p', __('Patterns and replacements'));
@@ -96,7 +89,6 @@
 			if ($update) {
 				// Reconstruct our current patterns array and description, so they are up-to-date when form is viewed right after save, without refresh/redirect
 				$this->_patterns = array();
-				$this->_description = str_replace(array('\'', '"'), array('&#039;', '&quot;'), $_POST['fields']['description']);
 
 				$index = 0;
 				$code = '';
@@ -106,7 +98,6 @@
 			}
 
 			return array(
-				'/*'.' DESCRIPTION */' => $this->_description,
 				'/*'.' PATTERNS */' => '$this->_patterns = '.preg_replace(array("/\n  /", "/\n\)\s*$/"), array("\n\t\t\t\t", "\n\t\t\t);"), var_export($this->_patterns, true)),
 			);
 		}

@@ -33,6 +33,37 @@
 				$about = $this->_Parent->FormatterManager->about($this->_context[0]);
 			}
 
+			if ($_SESSION['templatedtextformatters-alert']) {
+				switch ($_SESSION['templatedtextformatters-alert']) {
+					case 'saved':
+						$this->pageAlert(
+							__(
+								'Templated Text Formatter updated at %1$s. <a href="%2$s" accesskey="c">Create another?</a> <a href="%3$s" accesskey="a">View all Templated Text Formatters</a>',
+								array(
+									DateTimeObj::getTimeAgo(__SYM_TIME_FORMAT__),
+									SYMPHONY_URL . '/extension/templatedtextformatters/edit/',
+									SYMPHONY_URL . '/extension/templatedtextformatters'
+								)
+							),
+							Alert::SUCCESS);
+						break;
+
+					case 'created':
+						$this->pageAlert(
+							__(
+								'Templated Text Formatter created at %1$s. <a href="%2$s" accesskey="c">Create another?</a> <a href="%3$s" accesskey="a">View all Templated Text Formatters</a>',
+								array(
+									DateTimeObj::getTimeAgo(__SYM_TIME_FORMAT__),
+									SYMPHONY_URL . '/extension/templatedtextformatters/edit/',
+									SYMPHONY_URL . '/extension/templatedtextformatters'
+								)
+							),
+							Alert::SUCCESS);
+						break;
+				}
+				unset($_SESSION['templatedtextformatters-alert']);
+			}
+
 			$fields = $_POST['fields'];
 
 			$this->setPageType('form');
@@ -47,7 +78,7 @@
 			$div->setAttribute('class', 'group');
 
 			$label = Widget::Label(__('Name'));
-			if (isset($about['name'])) $label->appendChild(new XMLElement('i', __('Change will disconnect formatter from fields!')));
+			if (isset($about['name'])) $label->appendChild(new XMLElement('i', __('Change will disconnect this formatter from any chains and/or fields it may have been added to!')));
 			$label->appendChild(Widget::Input('fields[name]', ($fields['name'] ? $fields['name'] : $about['name'])));
 			$div->appendChild((isset($this->_errors['name']) ? $this->wrapFormElementWithError($label, $this->_errors['name']) : $label));
 
@@ -69,11 +100,26 @@
 
 			$fieldset->appendChild($div);
 
-			if (is_object($this->formatter) && method_exists($this->formatter, 'ttf_form')) {
-				$this->formatter->ttf_form($fieldset, $this);
-			}
+			$div = new XMLElement('div');
+			$label = Widget::Label(__('Description'));
+			$label->appendChild(new XMLElement('i', __('Optional')));
+			$label->appendChild(Widget::Input('fields[description]', General::sanitize(isset($fields['description']) ? $fields['description'] : $about['description'])));
+			$div->appendChild((isset($this->_errors['description']) ? $this->wrapFormElementWithError($label, $this->_errors['description']) : $label));
+			$fieldset->appendChild($div);
 
 			$this->Form->appendChild($fieldset);
+
+
+			if (is_object($this->formatter) && method_exists($this->formatter, 'ttf_form')) {
+				$fieldset = new XMLElement('fieldset');
+				$fieldset->setAttribute('class', 'settings');
+				$fieldset->appendChild(new XMLElement('legend', __('Format Options')));
+
+				$this->formatter->ttf_form($fieldset, $this);
+
+				$this->Form->appendChild($fieldset);
+			}
+
 
 			if (is_object($this->formatter)) {
 				$fieldset = new XMLElement('fieldset');
@@ -148,6 +194,11 @@
 				return;
 			}
 
+			$description = trim($fields['description']);
+			if (empty($description)) {
+				$description = __('N/A');
+			}
+
 			$tplfile = $types[$fields['type']]['path'].'/formatter.'.$fields['type'].'.tpl';
 			if (!@is_file($tplfile)) {
 				$this->_errors['type'] = __('Wrong type of text formatter');
@@ -176,22 +227,25 @@
 			$tokens = array(
 				'___'.$fields['type'].'/* CLASS NAME */' => $classname,
 				'/* NAME */' => preg_replace('/[^\w\s\.-_\&\;]/i', '', trim($fields['name'])),
-				'/* AUTHOR NAME */' => $this->_Parent->Author->getFullName(),
-				'/* AUTHOR WEBSITE */' => URL,
-				'/* AUTHOR EMAIL */' => $this->_Parent->Author->get('email'),
+				'/* AUTHOR NAME */' => self::cleanupString($this->_Parent->Author->getFullName()),
+				'/* AUTHOR WEBSITE */' => self::cleanupString(URL),
+				'/* AUTHOR EMAIL */' => self::cleanupString($this->_Parent->Author->get('email')),
 				'/* RELEASE DATE */' => DateTimeObj::getGMT('c'), //date('Y-m-d', $oDate->get(true, false)),
+				'/* DESCRIPTION */' => self::cleanupString($description),
 				'/* TEMPLATEDTEXTFORMATTERS VERSION */' => $driverAbout['version'],
 				'/* TEMPLATEDTEXTFORMATTERS TYPE */' => $fields['type'],
 			);
 
-			if (is_object($this->formatter) && method_exists($this->formatter, 'ttf_tokens')) {
-				$tokens = array_merge($tokens, $this->formatter->ttf_tokens());
-			}
-			else {
+			if (!is_object($this->formatter)) {
 				include_once($tplfile);
 				$temp = 'formatter___'.$fields['type'];
 				$temp = new $temp($this->_Parent);
-				$tokens = array_merge($tokens, $temp->ttf_tokens());
+				if (method_exists($temp, 'ttf_tokens')) {
+					$tokens = array_merge($tokens, $temp->ttf_tokens());
+				}
+			}
+			else if (method_exists($this->formatter, 'ttf_tokens')) {
+				$tokens = array_merge($tokens, $this->formatter->ttf_tokens());
 			}
 
 			$ttfShell = file_get_contents($tplfile);
@@ -208,12 +262,14 @@
 					if ($queueForDeletion) General::deleteFile($queueForDeletion);
 					
 					// TODO: Find a way to make formatted fields update their content
-
-					redirect(URL . '/symphony/extension/templatedtextformatters/edit/'.$classname.'/'.($about['name'] ? 'saved' : 'created').'/');
+					$_SESSION['templatedtextformatters-alert'] = 'created';
+					redirect(URL . '/symphony/extension/templatedtextformatters/edit/'.$classname);
 				}
 				else {
 					// Update current data
+					$_SESSION['templatedtextformatters-alert'] = 'saved';
 					$_POST['fields']['name'] = $tokens['/* NAME */'];
+					$_POST['fields']['description'] = $tokens['/* DESCRIPTION */'];
 				}
 			}
 		}
@@ -224,6 +280,13 @@
 				$this->pageAlert(__('Failed to delete <code>%s</code>. Please check permissions.', array($file)), Alert::ERROR);
 			else
 				redirect(URL . '/symphony/extension/templatedtextformatters/');
+		}
+
+
+
+		// This prepares string to be ready to put between single quot characters in PHP source code.
+		public static function cleanupString($str) {
+			return preg_replace('/^\'|\'$/', '', var_export($str, true));
 		}
 
 	}

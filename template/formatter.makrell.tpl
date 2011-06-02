@@ -9,7 +9,6 @@
 	Class formatter___makrell/* CLASS NAME */ extends TextFormatter {
 
 		private $_macros;
-		private $_description;
 
 		private static $_makrell;
 
@@ -17,8 +16,6 @@
 			parent::__construct($parent);
 
 			/* MAKRELL MACROS */;
-
-			$this->_description = '/* DESCRIPTION */';
 		}
 		
 		public function about() {
@@ -61,10 +58,6 @@
 		// Hook for driver to call when generating edit form
 		// Add form fields to $form
 		public function ttf_form(&$form, &$page) {
-			$label = Widget::Label(__('Description'));
-			$label->appendChild(Widget::Input('fields[description]', $this->_description ? $this->_description : $_POST['fields']['description']));
-			$form->appendChild($label);
-
 			$div = new XMLElement('div');
 			$label = Widget::Label(__('Macro definitions'));
 			$label->appendChild(Widget::Textarea('fields[makrell_macros]', 10, 50, $this->_macros ? $this->_macros : $_POST['fields']['makrell_macros']));
@@ -78,12 +71,10 @@
 		// @return array where each key is a string which will be replaced in this template, and value is what key will be replaced with.
 		public function ttf_tokens($update = true) {
 			if ($update) {
-				$this->_description = str_replace(array('\'', '"'), array('&#039;', '&quot;'), $_POST['fields']['description']);
 				$this->_macros = (isset($_POST['fields']['makrell_macros']) ? trim($_POST['fields']['makrell_macros']) : '');
 			}
 
 			return array(
-				'/*'.' DESCRIPTION */' => $this->_description,
 				'/*'.' MAKRELL MACROS */' => '$this->_macros = '.var_export($this->_macros, true),
 			);
 		}
