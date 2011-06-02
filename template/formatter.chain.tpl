@@ -143,7 +143,7 @@
 				$description = __('N/A');
 			}
 			else {
-				$description = __('Formatting file in the following order: %s', array($description));
+				$description = __('Formatting text in the following order: %s', array($description));
 			}
 
 			return array(
