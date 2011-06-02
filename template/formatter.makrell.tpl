@@ -16,7 +16,8 @@
 		public function __construct(&$parent) {
 			parent::__construct($parent);
 
-			$this->_macros = '/* MAKRELL MACROS */';
+			/* MAKRELL MACROS */;
+
 			$this->_description = '/* DESCRIPTION */';
 		}
 		
@@ -83,7 +84,7 @@
 
 			return array(
 				'/*'.' DESCRIPTION */' => $this->_description,
-				'/*'.' MAKRELL MACROS */' => $this->_macros,
+				'/*'.' MAKRELL MACROS */' => '$this->_macros = '.var_export($this->_macros, true),
 			);
 		}
 	}
