@@ -87,7 +87,7 @@
 			$help = new XMLElement('p');
 			$help->setAttribute('class', 'help');
 			
-			$help->setValue(__('Select XSLT which will be used to format text.'));
+			$help->setValue(__('Select XSLT which will be used to transform XML with a single /data node containing text to format.'));
 			
 			$div->appendChild($label);
 			$div->appendChild($help);
