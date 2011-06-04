@@ -1,8 +1,8 @@
 # Templated Text Formatters
 
-- Version: 1.6
+- Version: 1.7
 - Author: Marcin Konicki (http://ahwayakchih.neoni.net)
-- Build Date: 02 June 2011
+- Build Date: 04 June 2011
 - Requirements: Symphony 2.2 or greater.
 
 
@@ -16,6 +16,7 @@
 
 ## Changelog
 
+- **1.7** New template: XSLT.
 - **1.6** Update for Symphony 2.2, fixed few bugs, updated Markdown template, added new template: Makrell, changed this README to Markdown syntax.
 - **1.5** Update for Symphony 2.0.3. This drops compatibility with Symphony 2.0.2.
 - **1.4** A lot of fixes, support translations, updated Markdown template.
