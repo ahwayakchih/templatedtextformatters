@@ -6,12 +6,22 @@
 	// That way editor can use it at the same time as other templated formatters and 
 	// formatters generated from them.
 	// When saving, ___[type]/* CLASS NAME */ will be replaced by class name entered in editor.
+
+	if (!class_exists('FormatterChain')) {
+		class FormatterChain {
+			public static $stack = array();
+		}
+	}
+
 	Class formatter___chain/* CLASS NAME */ extends TextFormatter {
 
 		private $_formatters;
+		private static $_recursion;
 
 		public function __construct(&$parent) {
 			parent::__construct($parent);
+
+			if (!is_array(self::$_recursion)) self::$_recursion = array();
 
 			/* FORMATTERS */
 
@@ -28,7 +38,7 @@
 					'website' => '/* AUTHOR WEBSITE */',
 					'email' => '/* AUTHOR EMAIL */'
 				),
-				'version' => '1.3',
+				'version' => '1.4',
 				'release-date' => '/* RELEASE DATE */',
 				'description' => '/* DESCRIPTION */',
 				'templatedtextformatters-version' => '/* TEMPLATEDTEXTFORMATTERS VERSION */', // required
@@ -41,11 +51,24 @@
 
 			if (count($this->_formatters) < 1) return stripslashes($string);
 
+			if (isset(self::$_recursion[__CLASS__]) && self::$_recursion[__CLASS__] > 0) {
+				return "<!-- CHAIN RECURSION ERROR\n*\n*\t"
+					.__("Detected text formatter recursion on %s", array("\n*\t/* NAME */ (/* CLASS NAME */)"))
+					."\n*\t"
+					.__("Formatter was run by %s", array("\n*\t".end(FormatterChain::$stack)))
+					."\n*\n//-->"
+					.stripslashes($string);
+			}
+
+			self::$_recursion[__CLASS__]++;
+			FormatterChain::$stack[] = '/* NAME */ (/* CLASS NAME */)';
 			$result = $string;
 			foreach ($this->_formatters as $id => $name) {
 				$formatter = $this->_Parent->FormatterManager->create($id);
 				$result = $formatter->run($result);
 			}
+			array_pop(FormatterChain::$stack);
+			self::$_recursion[__CLASS__]--;
 
 			return stripslashes($result);
 		}

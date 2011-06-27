@@ -43,6 +43,5 @@ Developers of text-formatters can now make them "template-friendly".
 ## Known issues
 
 1. After changing settings of formatter, you have to save every entry with fields that are formatted by it. Otherwise their data will stay unchanged :(. I don't know how (except for some very ugly hacks) to make textareas and other fields using text-formatters to update their content. Maybe formatted text should be cached with some known hash ID (or by text-formatter id)? That way it would be easy to refresh all content when needed (like: clear cache of every text formatted with X).
-2. There is no recursion detection! So be careful before You start chaining chains of text formatters :).
-3. I'm not sure about escaping PHP code parts. I tried to make it secure, but... well... backup Your installation before testing this :).
+2. I'm not sure about escaping PHP code parts. I tried to make it secure, but... well... backup Your installation before testing this :).
 
