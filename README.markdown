@@ -9,7 +9,7 @@
 
 ## Installation
 
-1. Check if `/symphony/workspace/text-formatters` exists and is writeable by Symphony.
+1. Check if `/symphony/workspace/text-formatters` exists and is writable  by Symphony.
 2. Upload the `templatedtextformatters` folder in this archive to your Symphony `extensions` folder.
 3. Enable it by selecting the "Templated Text Formatters" on `System/Extensions` page, choose Enable from the with-selected menu, then click Apply.
 4. Go to `Blueprints/Templated Text Formatters` and create new text formatters.
