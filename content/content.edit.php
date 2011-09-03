@@ -80,7 +80,7 @@
 			$label = Widget::Label(__('Name'));
 			if (isset($about['name'])) $label->appendChild(new XMLElement('i', __('Change will disconnect this formatter from any chains and/or fields it may have been added to!')));
 			$label->appendChild(Widget::Input('fields[name]', ($fields['name'] ? $fields['name'] : $about['name'])));
-			$div->appendChild((isset($this->_errors['name']) ? $this->wrapFormElementWithError($label, $this->_errors['name']) : $label));
+			$div->appendChild((isset($this->_errors['name']) ? Widget::wrapFormElementWithError($label, $this->_errors['name']) : $label));
 
 			$label = Widget::Label(__('Type'));
 
@@ -104,7 +104,7 @@
 			$label = Widget::Label(__('Description'));
 			$label->appendChild(new XMLElement('i', __('Optional')));
 			$label->appendChild(Widget::Input('fields[description]', General::sanitize(isset($fields['description']) ? $fields['description'] : $about['description'])));
-			$div->appendChild((isset($this->_errors['description']) ? $this->wrapFormElementWithError($label, $this->_errors['description']) : $label));
+			$div->appendChild((isset($this->_errors['description']) ? Widget::wrapFormElementWithError($label, $this->_errors['description']) : $label));
 			$fieldset->appendChild($div);
 
 			$this->Form->appendChild($fieldset);
