@@ -41,7 +41,7 @@
 				$_xsltproc = false;
 
 				if (!empty($this->_xsltfile)) {
-					$XSLTfilename = UTILITIES . '/'. preg_replace(array('%/+%', '%(^|/)../%'), '/', $this->_xsltfile);
+					$XSLTfilename = UTILITIES . '/'. preg_replace(array('%/+%', '%(^|/)\.\./%'), '/', $this->_xsltfile);
 					if (file_exists($XSLTfilename)) {
 						$xslt = new DomDocument;
 						if ($xslt->load($XSLTfilename)) {
