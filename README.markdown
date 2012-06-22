@@ -17,7 +17,7 @@
 
 ## Changelog
 
-- **1.8** Update for Symphony 2.3. This drops compatibility with Symphony 2.2. Removed Makrell formatter (Makrell project is dead).
+- **1.8** Update for Symphony 2.3. This drops compatibility with Symphony 2.2. Removed Makrell formatter (Makrell project is dead). Fixed a bug in XSLT template (error when there was no utility found).
 - **1.7** New template: XSLT.
 - **1.6** Update for Symphony 2.2, fixed few bugs, updated Markdown template, added new template: Makrell, changed this README to Markdown syntax.
 - **1.5** Update for Symphony 2.0.3. This drops compatibility with Symphony 2.0.2.
