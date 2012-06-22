@@ -16,7 +16,7 @@
 		</author>
 	</authors>
 	<releases>
-		<release version="1.8" date="2012-06-22" min="2.3">Update for Symphony 2.3. This drops compatibility with Symphony 2.2.</release>
+		<release version="1.8" date="2012-06-22" min="2.3">Update for Symphony 2.3. This drops compatibility with Symphony 2.2. Removed Makrell formatter (Makrell project is dead).</release>
 		<release version="1.7" date="2011-06-04" min="2.2" max="2.3">New template: XSLT.</release>
 		<release version="1.6" date="2011-06-02" min="2.2" max="2.3">Update for Symphony 2.2, fixed few bugs, updated Markdown template, added new template: Makrell, changed this README to Markdown syntax.</release>
 		<release version="1.5" date="2009-06-24" min="2.0.3" max="2.1.x">Update for Symphony 2.0.3. This drops compatibility with Symphony 2.0.2.</release>
