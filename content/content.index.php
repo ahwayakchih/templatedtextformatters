@@ -2,17 +2,18 @@
 
 	require_once(TOOLKIT . '/class.administrationpage.php');
 	require_once(TOOLKIT . '/class.textformattermanager.php');
+	require_once(TOOLKIT . '/class.extensionmanager.php');
 
 	Class contentExtensionTemplatedTextFormattersIndex extends AdministrationPage {
 
 		private $_driver;
 
-		public function __construct(&$parent) {
-			parent::__construct($parent);
+		public function __construct() {
+			parent::__construct();
 
 			$this->setTitle(__('%1$s &ndash; %2$s', array(__('Symphony'), __('Templated Text Formatters'))));
 
-			$this->_driver = $this->_Parent->ExtensionManager->create('templatedtextformatters');
+			$this->_driver = ExtensionManager::create('templatedtextformatters');
 		}
 
 		public function view() {
@@ -32,9 +33,8 @@
 				$aTableBody = array(Widget::TableRow(array(Widget::TableData(__('None found.'), 'inactive', NULL, count($aTableHead)))));
 			}
 			else {
-				$tfm = new TextformatterManager($this->_Parent);
 				foreach ($formatters as $id => $data) {
-					$formatter = $tfm->create($id);
+					$formatter = TextformatterManager::create($id);
 					$about = $formatter->about();
 
 					$td1 = Widget::TableData(Widget::Anchor($about['name'], URL."/symphony/extension/templatedtextformatters/edit/{$id}/", $about['name']));
@@ -56,17 +56,18 @@
 
 			$options = array(
 				array(NULL, false, __('With Selected...')),
-				array('delete', false, __('Delete'))
+				array('delete', false, __('Delete'), 'confirm', null, array(
+					'data-message' => __('Are you sure you want to delete the selected text formatters?')
+				))
 			);
 
-			$div->appendChild(Widget::Select('with-selected', $options));
-			$div->appendChild(Widget::Input('action[apply]', __('Apply'), 'submit'));
+			$div->appendChild(Widget::Apply($options));
 
 			$this->Form->appendChild($div);
 		}
 
 		public function action() {
-			if (!$_POST['action']['apply']) return;
+			if (!isset($_POST['action']['apply']) || !isset($_POST['with-selected'])) return;
 			if ($_POST['with-selected'] == 'delete' && is_array($_POST['items'])) {
 				foreach ($_POST['items'] as $id => $selected) {
 					$this->delete($id);

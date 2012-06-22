@@ -8,10 +8,6 @@
 	// When saving, ___[type]/* CLASS NAME */ will be replaced by class name entered in editor.
 	Class formatter___xsskiller/* CLASS NAME */ extends TextFormatter {
 
-		public function __construct(&$parent) {
-			parent::__construct($parent);
-		}
-		
 		public function about() {
 			return array(
 				'name' => '/* NAME */', // required

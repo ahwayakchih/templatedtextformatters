@@ -12,9 +12,7 @@
 
 		private static $_xsltproc;
 
-		public function __construct(&$parent) {
-			parent::__construct($parent);
-
+		public function __construct() {
 			/* XSLT UTILITY */;
 		}
 		
@@ -73,21 +71,27 @@
 			$label = Widget::Label(__('XSLT Utility'));
 
 			$utilities = General::listStructure(UTILITIES, array('xsl'), false, 'asc', UTILITIES);
-			$utilities = $utilities['filelist'];
+			if (!empty($utilities) && isset($utilities['filelist']) && is_array($utilities['filelist'])) {
+				$utilities = $utilities['filelist'];
 
-			$xsltfile = ($this->_xsltfile ? $this->_xsltfile : $_POST['fields']['xsltfile']);
-			$options = array();
+				$xsltfile = ($this->_xsltfile ? $this->_xsltfile : $_POST['fields']['xsltfile']);
+				$options = array();
 
-			foreach ($utilities as $utility) {
-				$options[] = array($utility, ($xsltfile == $utility), $utility);
+				foreach ($utilities as $utility) {
+					$options[] = array($utility, ($xsltfile == $utility), $utility);
+				}
+
+				$label->appendChild(Widget::Select('fields[xsltfile]', $options));
+
+				$help = new XMLElement('p');
+				$help->setAttribute('class', 'help');
+				$help->setValue(__('Select XSLT which will be used to transform XML with a single /data node containing text to format.'));
 			}
-
-			$label->appendChild(Widget::Select('fields[xsltfile]', $options));
-			
-			$help = new XMLElement('p');
-			$help->setAttribute('class', 'help');
-			
-			$help->setValue(__('Select XSLT which will be used to transform XML with a single /data node containing text to format.'));
+			else {
+				$help = new XMLElement('p');
+				$help->setAttribute('class', 'help');
+				$help->setValue(__('No XSLT utilities found. You can <a href="%s">create new</a> utilities in Blueprints section.', array(SYMPHONY_URL . '/blueprints/utilities/new/')));
+			}
 			
 			$div->appendChild($label);
 			$div->appendChild($help);

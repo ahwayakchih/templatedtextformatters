@@ -2,35 +2,32 @@
 
 	require_once(TOOLKIT . '/class.administrationpage.php');
 	require_once(TOOLKIT . '/class.textformattermanager.php');
+	require_once(TOOLKIT . '/class.extensionmanager.php');
 
 	Class contentExtensionTemplatedTextFormattersEdit extends AdministrationPage {
 
-		public $formatterManager;
 		public $formatter;
 
 		private $_driver;
 
-		public function __construct(&$parent) {
-			parent::__construct($parent);
+		public function __construct() {
+			parent::__construct();
 
-			if (!is_object($this->_Parent->FormatterManager)) {
-				$this->_Parent->FormatterManager = new TextformatterManager($this->_Parent);
-			}
 			if ($this->_context[0]) {
-				$this->formatter = $this->_Parent->FormatterManager->create($this->_context[0]);
+				$this->formatter = TextformatterManager::create($this->_context[0]);
 			}
 
-			$this->_driver = $this->_Parent->ExtensionManager->create('templatedtextformatters');
+			$this->_driver = ExtensionManager::create('templatedtextformatters');
 		}
 
 		public function view() {
 			$about = array();
 			if ($this->_context[0] && !is_object($this->formatter)) {
-				$this->formatter = $this->_Parent->FormatterManager->create($this->_context[0]);
+				$this->formatter = TextformatterManager::create($this->_context[0]);
 			}
 
 			if (is_object($this->formatter)) {
-				$about = $this->_Parent->FormatterManager->about($this->_context[0]);
+				$about = TextformatterManager::about($this->_context[0]);
 			}
 
 			if ($_SESSION['templatedtextformatters-alert']) {
@@ -69,19 +66,29 @@
 			$this->setPageType('form');
 			$this->setTitle(__('%1$s &ndash; %2$s &ndash; %3$s', array(__('Symphony'), __('Templated Text Formatters'), ($fields['name'] ? $fields['name'] : $about['name']))));
 			$this->appendSubheading($fields['name'] ? $fields['name'] : ($about['name'] ? $about['name'] : 'Untitled'));
+			$this->insertBreadcrumbs(array(
+				Widget::Anchor(__('Templated Text Formatters'), SYMPHONY_URL . '/extension/templatedtextformatters'),
+			));
 
 			$fieldset = new XMLElement('fieldset');
 			$fieldset->setAttribute('class', 'settings');
 			$fieldset->appendChild(new XMLElement('legend', __('Essentials')));
 
-			$div = new XMLElement('div');
-			$div->setAttribute('class', 'group');
+			$p = new XMLElement('p', __('WARNING: Name change will disconnect this formatter from any chains and/or fields it may have been added to!'));
+			$p->setAttribute('class', 'help');
+			$fieldset->appendChild($p);
 
+			$group = new XMLElement('div');
+			$group->setAttribute('class', 'two columns');
+
+			$div = new XMLElement('div', NULL, array('class' => 'column'));
 			$label = Widget::Label(__('Name'));
-			if (isset($about['name'])) $label->appendChild(new XMLElement('i', __('Change will disconnect this formatter from any chains and/or fields it may have been added to!')));
 			$label->appendChild(Widget::Input('fields[name]', ($fields['name'] ? $fields['name'] : $about['name'])));
 			$div->appendChild((isset($this->_errors['name']) ? Widget::wrapFormElementWithError($label, $this->_errors['name']) : $label));
 
+			$group->appendChild($div);
+
+			$div = new XMLElement('div', NULL, array('class' => 'column'));
 			$label = Widget::Label(__('Type'));
 
 			$types = $this->_driver->listTypes();
@@ -95,10 +102,11 @@
 				}
 			}
 
-			$label->appendChild(Widget::Select('fields[type]', $options, array('id' => 'context')));
+			$label->appendChild(Widget::Select('fields[type]', $options, array('id' => 'ds-context')));
 			$div->appendChild($label);
+			$group->appendChild($div);
 
-			$fieldset->appendChild($div);
+			$fieldset->appendChild($group);
 
 			$div = new XMLElement('div');
 			$label = Widget::Label(__('Description'));
@@ -126,24 +134,28 @@
 				$fieldset->setAttribute('class', 'settings');
 				$fieldset->appendChild(new XMLElement('legend', __('Testing grounds')));
 
-				$p = new XMLElement('p', __('For now, You have to save changes each time You want to see updated output'));
+				$p = new XMLElement('p', __('Save changes each time you want to see updated output'));
 				$p->setAttribute('class', 'help');
 				$fieldset->appendChild($p);
 
-				$div = new XMLElement('div');
-				$div->setAttribute('class', 'group');
+				$group = new XMLElement('div');
+				$group->setAttribute('class', 'two columns');
 
+				$div = new XMLElement('div', NULL, array('class' => 'column'));
 				$label = Widget::Label(__('Test input'));
 				$label->appendChild(Widget::Textarea('fields[testin]', 5, 50, $fields['testin']));
 				$div->appendChild($label);
+				$group->appendChild($div);
 
+				$div = new XMLElement('div', NULL, array('class' => 'column'));
 				$label = Widget::Label(__('Test output'));
 				$temp = '';
 				if ($fields['testin']) $temp = $this->formatter->run($fields['testin']);
 				$label->appendChild(Widget::Textarea('fields[testout]', 5, 50, $temp));
 				$div->appendChild($label);
+				$group->appendChild($div);
 
-				$fieldset->appendChild($div);
+				$fieldset->appendChild($group);
 				$this->Form->appendChild($fieldset);
 			}
 
@@ -168,15 +180,15 @@
 		public function save() {
 			$about = array();
 			if ($this->_context[0] && !is_object($this->formatter)) {
-				$this->formatter = $this->_Parent->FormatterManager->create($this->_context[0]);
+				$this->formatter = TextformatterManager::create($this->_context[0]);
 			}
 
 			if (is_object($this->formatter)) {
-				$about = $this->_Parent->FormatterManager->about($this->_context[0]);
+				$about = TextformatterManager::about($this->_context[0]);
 			}
 
 			$fields = $_POST['fields'];
-			$driverAbout = $this->_driver->about();
+			$driverAbout = ExtensionManager::about('templatedtextformatters');
 			$types = $this->_driver->listTypes();
 
 			if (strlen(trim($fields['name'])) < 1) {
@@ -224,12 +236,14 @@
 				$description = __('N/A');
 			}
 
+			$author = Symphony::Engine()->Author;
+
 			$tokens = array(
 				'___'.$fields['type'].'/* CLASS NAME */' => $classname,
 				'/* NAME */' => preg_replace('/[^\w\s\.-_\&\;]/i', '', trim($fields['name'])),
-				'/* AUTHOR NAME */' => self::cleanupString($this->_Parent->Author->getFullName()),
+				'/* AUTHOR NAME */' => self::cleanupString($author->getFullName()),
 				'/* AUTHOR WEBSITE */' => self::cleanupString(URL),
-				'/* AUTHOR EMAIL */' => self::cleanupString($this->_Parent->Author->get('email')),
+				'/* AUTHOR EMAIL */' => self::cleanupString($author->get('email')),
 				'/* RELEASE DATE */' => DateTimeObj::getGMT('c'), //date('Y-m-d', $oDate->get(true, false)),
 				'/* DESCRIPTION */' => self::cleanupString($description),
 				'/* TEMPLATEDTEXTFORMATTERS VERSION */' => $driverAbout['version'],
@@ -239,7 +253,7 @@
 			if (!is_object($this->formatter)) {
 				include_once($tplfile);
 				$temp = 'formatter___'.$fields['type'];
-				$temp = new $temp($this->_Parent);
+				$temp = new $temp();
 				if (method_exists($temp, 'ttf_tokens')) {
 					$tokens = array_merge($tokens, $temp->ttf_tokens());
 				}
@@ -253,7 +267,7 @@
 			$ttfShell = str_replace('/* CLASS NAME */', $classname, $ttfShell);
 
 			// Write the file
-			if (!is_writable(dirname($file)) || !$write = General::writeFile($file, $ttfShell, $this->_Parent->Configuration->get('write_mode', 'file'))) {
+			if (!is_writable(dirname($file)) || !$write = General::writeFile($file, $ttfShell, Symphony::Configuration()->get('write_mode', 'file'))) {
 				$this->pageAlert(__('Failed to write Text Formatter source to <code>%s</code>. Please check permissions.', array($file)), Alert::ERROR);
 			}
 			// Write Successful

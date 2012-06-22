@@ -18,16 +18,11 @@
 		private $_formatters;
 		private static $_recursion;
 
-		public function __construct(&$parent) {
-			parent::__construct($parent);
-
+		public function __construct() {
 			if (!is_array(self::$_recursion)) self::$_recursion = array();
 
-			/* FORMATTERS */
+			/* FORMATTERS */;
 
-			if (!is_object($this->_Parent->FormatterManager)) {
-				$this->_Parent->FormatterManager = new TextformatterManager($this->_Parent);
-			}
 		}
 		
 		public function about() {
@@ -64,7 +59,7 @@
 			FormatterChain::$stack[] = '/* NAME */ (/* CLASS NAME */)';
 			$result = $string;
 			foreach ($this->_formatters as $id => $name) {
-				$formatter = $this->_Parent->FormatterManager->create($id);
+				$formatter = TextformatterManager::create($id);
 				$result = $formatter->run($result);
 			}
 			array_pop(FormatterChain::$stack);
@@ -76,7 +71,7 @@
 		// Hook for driver to call when generating edit form
 		// Add form fields to $form
 		public function ttf_form(&$form, &$page) {
-			$formatters = $this->_Parent->FormatterManager->listAll();
+			$formatters = TextformatterManager::listAll();
 
 			// Make formatters from $this->_formatters to be first and keep their order
 			$temp = array();
@@ -85,15 +80,19 @@
 			}
 			$formatters = array_merge($temp, $formatters);
 
-			$subsection = new XMLElement('div');
-			$subsection->setAttribute('class', 'subsection');
+			$p = new XMLElement('p', __('Formatters will be applied in order from top to bottom.'));
+			$p->setAttribute('class', 'help');
+			$form->appendChild($p);
+
+			$subsection = new XMLElement('div', NULL, array('class' => 'frame'));
 			$p = new XMLElement('p', __('Text formatters'));
 			$p->setAttribute('class', 'label');
 			$subsection->appendChild($p);
 
 			$ol = new XMLElement('ol');
 			$ol->setAttribute('id', 'fields-duplicator');
-			$ol->setAttribute('class', 'orderable subsection');
+			$ol->setAttribute('data-add', __('Add formatter'));
+			$ol->setAttribute('data-remove', __('Remove formatter'));
 
 			foreach ($formatters as $id => $about) {
 				if ($about['handle'] == '/* CLASS NAME */') continue;
@@ -101,46 +100,52 @@
 				$li = new XMLElement('li');
 				$li->setAttribute('class', 'unique template field-'.$about['handle']);
 
-				$h4 = new XMLElement('h4', $about['name']);
-				if ($about['templatedtextformatters-type']) {
-					$i = new XMLElement('i');
-					$i->appendChild(Widget::Anchor(__('Edit'), URL.'/symphony/extension/templatedtextformatters/edit/'.$about['handle'], __('Edit this formatter')));
-					$h4->appendChild($i);
-				}
-				$li->appendChild($h4);
-
-				$p = new XMLElement('p', $about['description']);
-				$li->appendChild($p);
+				$header = new XMLElement('header', NULL, array('class' => 'main', 'data-name' => $about['name']));
+				$h4 = new XMLElement('h4', '<strong>' . $about['name'] . '</strong>' . ($about['templatedtextformatters-type'] ? ' <span class="type">' . $about['templatedtextformatters-type'] . '</span>' : ''));
+				$header->appendChild($h4);
+				$li->appendChild($header);
 
 				$li->appendChild(Widget::Input('fields[formatters]['.$id.']', $about['name'], 'hidden'));
+
+				$div = new XMLElement('div');
+				$p = new XMLElement('p', $about['description']);
+				$div->appendChild($p);
+				if ($about['templatedtextformatters-type']) {
+					$p = new XMLElement('p');
+					$p->appendChild(Widget::Anchor(__('Edit'), URL.'/symphony/extension/templatedtextformatters/edit/'.$about['handle'], __('Edit this formatter')));
+					$div->appendChild($p);
+				}
+				$li->appendChild($div);
+
 				$ol->appendChild($li);
 
 				if ($this->_formatters[$id]) {
 					$li = new XMLElement('li');
 					$li->setAttribute('class', 'field-'.$about['handle']);
 
-					$h4 = new XMLElement('h4', $about['name']);
-					if ($about['templatedtextformatters-type']) {
-						$i = new XMLElement('i');
-						$i->appendChild(Widget::Anchor(__('Edit'), URL.'/symphony/extension/templatedtextformatters/edit/'.$about['handle'], __('Edit this formatter')));
-						$h4->appendChild($i);
-					}
-					$li->appendChild($h4);
-
-					$p = new XMLElement('p', $about['description']);
-					$li->appendChild($p);
+					$header = new XMLElement('header', NULL, array('class' => 'main', 'data-name' => $about['name']));
+					$h4 = new XMLElement('h4', '<strong>' . $about['name'] . '</strong>' . ($about['templatedtextformatters-type'] ? ' <span class="type">' . $about['templatedtextformatters-type'] . '</span>' : ''));
+					$header->appendChild($h4);
+					$li->appendChild($header);
 
 					$li->appendChild(Widget::Input('fields[formatters]['.$id.']', $about['name'], 'hidden'));
+
+					$div = new XMLElement('div');	
+					$p = new XMLElement('p', $about['description']);
+					$div->appendChild($p);
+					if ($about['templatedtextformatters-type']) {
+						$p = new XMLElement('p');
+						$p->appendChild(Widget::Anchor(__('Edit'), URL.'/symphony/extension/templatedtextformatters/edit/'.$about['handle'], __('Edit this formatter')));
+						$div->appendChild($p);
+					}
+					$li->appendChild($div);
+
 					$ol->appendChild($li);
 				}
 			}
 			
 			$subsection->appendChild($ol);
 			$form->appendChild($subsection);
-
-			$p = new XMLElement('p', __('Formatters will be applied in order from top to bottom.'));
-			$p->setAttribute('class', 'help');
-			$form->appendChild($p);
 		}
 
 		// Hook called by TemplatedTextFormatters when generating formatter
@@ -149,7 +154,7 @@
 		public function ttf_tokens($update = true) {
 			$description = '';
 			if ($update) {
-				$formatters = $this->_Parent->FormatterManager->listAll();
+				$formatters = TextformatterManager::listAll();
 
 				// Reconstruct our current formatters array, so it's up-to-date when form is viewed right after save, without refresh/redirect
 				$this->_formatters = array();

@@ -16,9 +16,7 @@
 		private static $_markdown;
 		private static $_purifier;
 
-		public function __construct(&$parent) {
-			parent::__construct($parent);
-
+		public function __construct() {
 			$this->_use_markdownextra = '/* USE MARKDOWNEXTRA */';
 			$this->_use_smartypants = '/* USE SMARTYPANTS */';
 			$this->_use_htmlpurifier = '/* USE HTMLPURIFIER */';
@@ -46,11 +44,11 @@
 			if (!$string) return $string;
 
 			if (!isset(self::$_markdown)) {
-				if (!file_exists(EXTENSIONS . '/markdown/lib/php-markdown-extra-1.2.4/markdown.php')) {
+				if (!file_exists(EXTENSIONS . '/markdown/lib/php-markdown-extra-1.2.5/markdown.php')) {
 					self::$_markdown = false;
 				}
 				else {
-					@include_once(EXTENSIONS . '/markdown/lib/php-markdown-extra-1.2.4/markdown.php');
+					@include_once(EXTENSIONS . '/markdown/lib/php-markdown-extra-1.2.5/markdown.php');
 					if ($this->_use_markdownextra == 'yes') {
 						self::$_markdown = new MarkdownExtra_Parser();
 						self::$_markdown->fn_link_class = $this->_use_link_class;
@@ -66,8 +64,8 @@
 			}
 
 			if ($this->_use_htmlpurifier == 'yes' && !function_exists('HTMLPurifier')) {
-				if (file_exists(EXTENSIONS . '/markdown/lib/htmlpurifier-4.0.0-standalone/HTMLPurifier.standalone.php')) {
-					@include_once(EXTENSIONS . '/markdown/lib/htmlpurifier-4.0.0-standalone/HTMLPurifier.standalone.php');
+				if (file_exists(EXTENSIONS . '/markdown/lib/htmlpurifier-4.4.0-standalone/HTMLPurifier.standalone.php')) {
+					@include_once(EXTENSIONS . '/markdown/lib/htmlpurifier-4.4.0-standalone/HTMLPurifier.standalone.php');
 					self::$_purifier = new HTMLPurifier();
 				}
 				else {
@@ -92,42 +90,52 @@
 		// Hook for driver to call when generating edit form
 		// Add form fields to $form
 		public function ttf_form(&$form, &$page) {
-			$div = new XMLElement('div');
-			$div->setAttribute('class', 'group');
+			$group = new XMLElement('div');
+			$group->setAttribute('class', 'two columns');
 
+			$div = new XMLElement('div', NULL, array('class' => 'column'));
 			$label = Widget::Label(__('Footnote link class'));
 			$label->appendChild(new XMLElement('i', __('optional')));
 			$input = Widget::Input('fields[use_link_class]', $this->_use_link_class);
 			$label->appendChild($input);
 			$div->appendChild($label);
+			$group->appendChild($div);
 
+			$div = new XMLElement('div', NULL, array('class' => 'column'));
 			$label = Widget::Label(__('Footnote backlink class'));
 			$label->appendChild(new XMLElement('i', __('optional')));
 			$input = Widget::Input('fields[use_backlink_class]', $this->_use_backlink_class);
 			$label->appendChild($input);
 			$div->appendChild($label);
+			$group->appendChild($div);
 
-			$form->appendChild($div);
+			$form->appendChild($group);
 
-			$div = new XMLElement('div');
-			$div->setAttribute('class', 'group triple');
+			$group = new XMLElement('div');
+			$group->setAttribute('class', 'three columns');
 
+			$div = new XMLElement('div', NULL, array('class' => 'column'));
 			$label = Widget::Label();
 			$input = Widget::Input('fields[use_markdownextra]', 'yes', 'checkbox', ($this->_use_markdownextra == 'yes' ? array('checked' => 'checked') : NULL));
 			$label->setValue(__('%1$s Use <a href="%2$s" target="_blank">MarkdownExtra</a> syntax', array($input->generate(false), 'http://michelf.com/projects/php-markdown/extra/')));
 			$div->appendChild($label);
+			$group->appendChild($div);
 
+			$div = new XMLElement('div', NULL, array('class' => 'column'));
 			$label = Widget::Label();
 			$input = Widget::Input('fields[use_smartypants]', 'yes', 'checkbox', ($this->_use_smartypants == 'yes' ? array('checked' => 'checked') : NULL));
 			$label->setValue(__('%1$s Use <a href="%2$s" target="_blank">SmartyPants</a> filter', array($input->generate(false), 'http://michelf.com/projects/php-smartypants/')));
 			$div->appendChild($label);
+			$group->appendChild($div);
 
+			$div = new XMLElement('div', NULL, array('class' => 'column'));
 			$label = Widget::Label();
 			$input = Widget::Input('fields[use_htmlpurifier]', 'yes', 'checkbox', ($this->_use_htmlpurifier == 'yes' ? array('checked' => 'checked') : NULL));
 			$label->setValue(__('%1$s Use <a href="%2$s" target="_blank">HTML Purifier</a> filter', array($input->generate(false), 'http://htmlpurifier.org/')));
 			$div->appendChild($label);
+			$group->appendChild($div);
 
-			$form->appendChild($div);
+			$form->appendChild($group);
 		}
 
 		// Hook called by TemplatedTextFormatters when generating formatter

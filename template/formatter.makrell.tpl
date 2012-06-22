@@ -12,9 +12,7 @@
 
 		private static $_makrell;
 
-		public function __construct(&$parent) {
-			parent::__construct($parent);
-
+		public function __construct() {
 			/* MAKRELL MACROS */;
 		}
 		

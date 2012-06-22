@@ -10,10 +10,8 @@
 
 		private $_patterns;
 
-		public function __construct(&$parent) {
-			parent::__construct($parent);
-
-			/* PATTERNS */
+		public function __construct() {
+			/* PATTERNS */;
 		}
 		
 		public function about() {

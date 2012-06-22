@@ -1,0 +1,30 @@
+<extension id="templatedtextformatters" xmlns="http://symphony-cms.com/schemas/extension/1.0">
+	<name>Templated Text Formatters</name>
+	<description>Templated Text Formatters allows you to create chains of text formatters as if they were one text formatter and/or create new text formatters based on installed templates. For example, it allows to chain Markdown and BBCode text formatters, so text will be formatted by Markdown first and than by BBCode.</description>
+	<repo type="github">https://github.com/ahwayakchih/templatedtextformatters</repo>
+	<url type="discuss">http://symphony-cms.com/discuss/thread/262/</url>
+	<url type="issues">https://github.com/ahwayakchih/templatedtextformatters/issues</url>
+	<types>
+		<type>Text Formatters</type>
+		<type>Workflow</type>
+	</types>
+	<authors>
+		<author>
+			<name github="ahwayakchih" symphony="ahwayakchih">Marcin Konicki</name>
+			<email>ahwayakchih@neoni.net</email>
+			<website>http://ahwayakchih.neoni.net</website>
+		</author>
+	</authors>
+	<releases>
+		<release version="1.8" date="2012-06-22" min="2.3">Update for Symphony 2.3. This drops compatibility with Symphony 2.2.</release>
+		<release version="1.7" date="2011-06-04" min="2.2" max="2.3">New template: XSLT.</release>
+		<release version="1.6" date="2011-06-02" min="2.2" max="2.3">Update for Symphony 2.2, fixed few bugs, updated Markdown template, added new template: Makrell, changed this README to Markdown syntax.</release>
+		<release version="1.5" date="2009-06-24" min="2.0.3" max="2.1.x">Update for Symphony 2.0.3. This drops compatibility with Symphony 2.0.2.</release>
+		<release version="1.4" date="2009-03-18" min="2.0.2" max="2.0.2">A lot of fixes, support translations, updated Markdown template.</release>
+		<release version="1.3" date="2009-03-14" min="2.0" max="2.0.2">Fixes and new template: XSS killer.</release>
+		<release version="1.2" date="2008-12-11" min="2.0" max="2.0.2">Initial release.</release>
+	</releases>
+	<media>
+		<item type="image" url="https://github.com/ahwayakchih/templatedtextformatters/raw/master/screenshots/flyer.png">Screenshots.</item>
+	</media>
+</extension>

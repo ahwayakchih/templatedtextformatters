@@ -1,15 +1,17 @@
 <?php
+	require_once(TOOLKIT . '/class.textformattermanager.php');
+	require_once(TOOLKIT . '/class.extensionmanager.php');
 
 	Class extension_templatedtextformatters extends Extension {
 	
 		public function about() {
 			return array('name' => __('Templated Text Formatters'),
-						 'version' => '1.7',
-						 'release-date' => '2011-06-04',
+						 'version' => '1.8',
+						 'release-date' => '2012-06-22',
 						 'author' => array('name' => 'Marcin Konicki',
 										   'website' => 'http://ahwayakchih.neoni.net',
 										   'email' => 'ahwayakchih@neoni.net'),
-						 'description' => __('Allows to chain text formatters into as if they were one text formatter and/or create new text formatters based on installed templates. For example You can chain Markdown and BBCode text formatters, so text will be formatted by Markdown first and than by BBCode.')
+						 'description' => __('Allows you to create chains of text formatters as if they were one text formatter and/or create new text formatters based on installed templates. For example, it allows to chain Markdown and BBCode text formatters, so text will be formatted by Markdown first and than by BBCode.')
 				 		);
 		}
 
@@ -70,7 +72,7 @@
 			static $result;
 			if (is_array($result)) return $result;
 
-			$extensions = Symphony::ExtensionManager()->listInstalledHandles();
+			$extensions = ExtensionManager::listInstalledHandles();
 			if (!is_array($extensions) || empty($extensions)) return array();
 
 			$result = array();
@@ -101,7 +103,7 @@
 		private function upgrade_1_3() {
 			$types = $this->listTypes();
 			$formatters = $this->listAll();
-			$aboutDriver = $this->about();
+			$aboutDriver = ExtensionManager::about('templatedtextformatters');
 
 			foreach (array_keys($types) as $type) {
 				$types[$type]['code'] = file_get_contents($types[$type]['path'].'/formatter.'.$type.'.tpl');
@@ -110,7 +112,6 @@
 				}
 			}
 
-			include_once(TOOLKIT . '/class.textformattermanager.php');
 			foreach ($formatters as $id => $dummy) {
 				$file = TEXTFORMATTERS . "/formatter.{$id}.php";
 				$data = file_get_contents($file);
@@ -128,7 +129,7 @@
 
 				include_once($file);
 				$classname = "formatter{$id}";
-				$old = new $classname($this->_Parent);
+				$old = new $classname();
 
 				$about = $old->about();
 				$tokens = array(
