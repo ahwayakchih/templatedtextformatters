@@ -21,8 +21,8 @@
 			- Removed Makrell formatter (Makrell project is dead).
 			- Fixed a bug in XSLT template (error when there was no utility found).
 		</release>
-		<release version="1.7" date="2011-06-04" min="2.2" max="2.3">Added new template: XSLT.</release>
-		<release version="1.6" date="2011-06-02" min="2.2" max="2.3">
+		<release version="1.7" date="2011-06-04" min="2.2" max="2.2.x">Added new template: XSLT.</release>
+		<release version="1.6" date="2011-06-02" min="2.2" max="2.2.x">
 			- Update for Symphony 2.2.
 			- Fixed few bugs.
 			- Updated Markdown template.
