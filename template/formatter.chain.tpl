@@ -90,7 +90,8 @@
 			$subsection->appendChild($p);
 
 			$ol = new XMLElement('ol');
-			$ol->setAttribute('id', 'fields-duplicator');
+			$ol->setAttribute('id', 'formatters-duplicator');
+			$ol->setAttribute('class', 'templatedtextformatter-duplicator');
 			$ol->setAttribute('data-add', __('Add formatter'));
 			$ol->setAttribute('data-remove', __('Remove formatter'));
 

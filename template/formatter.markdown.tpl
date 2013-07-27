@@ -44,11 +44,11 @@
 			if (!$string) return $string;
 
 			if (!isset(self::$_markdown)) {
-				if (!file_exists(EXTENSIONS . '/markdown/lib/php-markdown-extra-1.2.5/markdown.php')) {
+				if (!file_exists(EXTENSIONS . '/markdown/lib/php-markdown-extra-1.2.7/markdown.php')) {
 					self::$_markdown = false;
 				}
 				else {
-					@include_once(EXTENSIONS . '/markdown/lib/php-markdown-extra-1.2.5/markdown.php');
+					@include_once(EXTENSIONS . '/markdown/lib/php-markdown-extra-1.2.7/markdown.php');
 					if ($this->_use_markdownextra == 'yes') {
 						self::$_markdown = new MarkdownExtra_Parser();
 						self::$_markdown->fn_link_class = $this->_use_link_class;
@@ -59,13 +59,15 @@
 			}
 
 			if ($this->_use_smartypants == 'yes' && !function_exists('SmartyPants')) {
-				if (file_exists(EXTENSIONS . '/markdown/lib/php-smartypants-1.5.1e/smartypants.php')) @include_once(EXTENSIONS . '/markdown/lib/php-smartypants-1.5.1e/smartypants.php');
+				if (file_exists(EXTENSIONS . '/markdown/lib/php-smartypants-1.5.1f/smartypants.php')) {
+					@include_once(EXTENSIONS . '/markdown/lib/php-smartypants-1.5.1f/smartypants.php');
+				}
 				else $this->_use_smartypants = false;
 			}
 
 			if ($this->_use_htmlpurifier == 'yes' && !function_exists('HTMLPurifier')) {
-				if (file_exists(EXTENSIONS . '/markdown/lib/htmlpurifier-4.4.0-standalone/HTMLPurifier.standalone.php')) {
-					@include_once(EXTENSIONS . '/markdown/lib/htmlpurifier-4.4.0-standalone/HTMLPurifier.standalone.php');
+				if (file_exists(EXTENSIONS . '/markdown/lib/htmlpurifier-4.5.0-standalone/HTMLPurifier.standalone.php')) {
+					@include_once(EXTENSIONS . '/markdown/lib/htmlpurifier-4.5.0-standalone/HTMLPurifier.standalone.php');
 					self::$_purifier = new HTMLPurifier();
 				}
 				else {

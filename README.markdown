@@ -1,9 +1,9 @@
 # Templated Text Formatters
 
-- Version: 1.8
+- Version: 1.9
 - Author: Marcin Konicki (http://ahwayakchih.neoni.net)
-- Build Date: 22 June 2012
-- Requirements: Symphony 2.3 or greater.
+- Build Date: 26 July 2013
+- Requirements: Symphony 2.3.3 or greater.
 - Text rendered on screenshots was rendered with Lobster font (http://www.impallari.com/lobster/) created by Pablo Impallari.
 
 
@@ -17,6 +17,7 @@
 
 ## Changelog
 
+- **1.9** Update for Symphony 2.3.3. This may break compatibility with Symphony 2.3. Updated Markdown template.
 - **1.8** Update for Symphony 2.3. This drops compatibility with Symphony 2.2. Removed Makrell formatter (Makrell project is dead). Fixed a bug in XSLT template (error when there was no utility found).
 - **1.7** New template: XSLT.
 - **1.6** Update for Symphony 2.2, fixed few bugs, updated Markdown template, added new template: Makrell, changed this README to Markdown syntax.

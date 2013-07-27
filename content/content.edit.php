@@ -21,6 +21,8 @@
 		}
 
 		public function view() {
+			Administration::instance()->Page->addScriptToHead(URL . '/extensions/templatedtextformatters/assets/templatedtextformatters.settings.js', 101, false);
+
 			$about = array();
 			if ($this->_context[0] && !is_object($this->formatter)) {
 				$this->formatter = TextformatterManager::create($this->_context[0]);

@@ -41,30 +41,43 @@
 		// Hook for driver to call when generating edit form
 		// Add form fields to $form
 		public function ttf_form(&$form, &$page) {
+			$p = new XMLElement('p', __('Wrap patterns with slashes, e.g., "/pattern_here/". You can use backreferences in replacement. Syntax for pattern and replacement is exactly the same as in <a href="http://www.php.net/manual/en/function.preg-replace.php" target="_blank">preg_replace()</a> PHP function.'));
+			$p->setAttribute('class', 'help');
+			$form->appendChild($p);
+
 			$subsection = new XMLElement('div');
-			$subsection->setAttribute('class', 'subsection');
+			$subsection->setAttribute('class', 'frame');
 			$p = new XMLElement('p', __('Patterns and replacements'));
 			$p->setAttribute('class', 'label');
 			$subsection->appendChild($p);
 
 			$ol = new XMLElement('ol');
-			$ol->setAttribute('id', 'fields-duplicator');
+			$ol->setAttribute('id', 'regex-duplicator');
+			$ol->setAttribute('class', 'templatedtextformatter-duplicator');
+			$ol->setAttribute('data-add', __('Add regex'));
+			$ol->setAttribute('data-remove', __('Remove regex'));
 
 			$temp = $this->_patterns;
 			$temp[''] = '';
 			foreach ($temp as $pattern => $replacement) {
 				$li = new XMLElement('li');
-				$li->setAttribute('class', ($pattern ? 'unique field-regex' : ' template field-regex'));
-				$li->appendChild(new XMLElement('h4', __('Replace')));
+				$li->setAttribute('class', ($pattern ? 'field-regex' : 'template field-regex'));
+				$li->setAttribute('data-type', 'regex');
+
+				$header = new XMLElement('header', NULL, array('class' => 'main', 'data-name' => __('Replace')));
+				$header->appendChild(new XMLElement('h4', '<strong>' . __('Replace') . '</strong> <span class="type">' . __('regex') . '</span>'));
+				$li->appendChild($header);
 
 				$div = new XMLElement('div');
-				$div->setAttribute('class', 'group');
+				$div->setAttribute('class', 'two columns');
 
-				$label = Widget::Label(__('Pattern'));
+				$label = Widget::Label(__('Find with pattern'));
+				$label->setAttribute('class', 'column');
 				$label->appendChild(Widget::Input('fields[patterns][]', htmlentities($pattern, ENT_QUOTES, 'UTF-8')));
 				$div->appendChild($label);
 
-				$label = Widget::Label(__('Replacement'));
+				$label = Widget::Label(__('Replace with'));
+				$label->setAttribute('class', 'column');
 				$label->appendChild(Widget::Input('fields[replacements][]', htmlentities($replacement, ENT_QUOTES, 'UTF-8')));
 				$div->appendChild($label);
 
@@ -74,10 +87,6 @@
 
 			$subsection->appendChild($ol);
 			$form->appendChild($subsection);
-
-			$p = new XMLElement('p', __('Wrap patterns with slashes, e.g., "/pattern_here/". You can use backreferences in replacement. Syntax for pattern and replacement is exactly the same as in <a href="http://www.php.net/manual/en/function.preg-replace.php" target="_blank">preg_replace()</a> function in PHP.'));
-			$p->setAttribute('class', 'help');
-			$form->appendChild($p);
 		}
 
 		// Hook called by TemplatedTextFormatters when generating formatter
@@ -92,6 +101,7 @@
 				$code = '';
 				if (!empty($_POST['fields']['patterns']) && count($_POST['fields']['patterns']) == count($_POST['fields']['replacements'])) {
 					$this->_patterns = array_combine($_POST['fields']['patterns'], $_POST['fields']['replacements']);
+					unset($this->_patterns['']);
 				}
 			}
 
