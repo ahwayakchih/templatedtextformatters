@@ -16,6 +16,9 @@
 		</author>
 	</authors>
 	<releases>
+		<release version="1.10" date="2015-01-16" min="2.5.2">
+			- Update for Symphony 2.5.2.
+		</release>
 		<release version="1.9" date="2013-07-26" min="2.3.3">
 			- Update for Symphony 2.3.3. This may break compatibility with Symphony 2.3.
 			- Updated Markdown template.

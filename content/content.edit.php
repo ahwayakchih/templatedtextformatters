@@ -39,7 +39,8 @@
 							__(
 								'Templated Text Formatter updated at %1$s. <a href="%2$s" accesskey="c">Create another?</a> <a href="%3$s" accesskey="a">View all Templated Text Formatters</a>',
 								array(
-									DateTimeObj::getTimeAgo(__SYM_TIME_FORMAT__),
+									// https://github.com/symphonycms/symphony-2/wiki/Migration-Guide-to-2.4-for-Developers#functions
+									Widget::Time()->generate(),
 									SYMPHONY_URL . '/extension/templatedtextformatters/edit/',
 									SYMPHONY_URL . '/extension/templatedtextformatters'
 								)
@@ -52,7 +53,8 @@
 							__(
 								'Templated Text Formatter created at %1$s. <a href="%2$s" accesskey="c">Create another?</a> <a href="%3$s" accesskey="a">View all Templated Text Formatters</a>',
 								array(
-									DateTimeObj::getTimeAgo(__SYM_TIME_FORMAT__),
+									// https://github.com/symphonycms/symphony-2/wiki/Migration-Guide-to-2.4-for-Developers#functions
+									Widget::Time()->generate(),
 									SYMPHONY_URL . '/extension/templatedtextformatters/edit/',
 									SYMPHONY_URL . '/extension/templatedtextformatters'
 								)
@@ -238,7 +240,12 @@
 				$description = __('N/A');
 			}
 
-			$author = Symphony::Engine()->Author;
+			// https://github.com/symphonycms/symphony-2/wiki/Migration-Guide-to-2.5-for-Developers#properties
+			if (is_callable(array('Symphony', 'Author'))) {
+				$author = Symphony::Author();
+			} else {
+				$author = Administration::instance()->Author;
+			}
 
 			$tokens = array(
 				'___'.$fields['type'].'/* CLASS NAME */' => $classname,
