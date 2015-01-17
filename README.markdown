@@ -3,7 +3,7 @@
 - Version: 1.9
 - Author: Marcin Konicki (http://ahwayakchih.neoni.net)
 - Build Date: 26 July 2013
-- Requirements: Symphony 2.3.3 or greater.
+- Requirements: Symphony 2.4.x or greater.
 - Text rendered on screenshots was rendered with Lobster font (http://www.impallari.com/lobster/) created by Pablo Impallari.
 
 
@@ -17,6 +17,7 @@
 
 ## Changelog
 
+- **1.10** Update for Symphony 2.5.
 - **1.9** Update for Symphony 2.3.3. This may break compatibility with Symphony 2.3. Updated Markdown template.
 - **1.8** Update for Symphony 2.3. This drops compatibility with Symphony 2.2. Removed Makrell formatter (Makrell project is dead). Fixed a bug in XSLT template (error when there was no utility found).
 - **1.7** New template: XSLT.
