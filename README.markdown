@@ -4,7 +4,7 @@
 - Author: Marcin Konicki (http://ahwayakchih.neoni.net)
 - Build Date: 26 July 2013
 - Requirements: Symphony 2.4.x or greater.
-- Text rendered on screenshots was rendered with Lobster font (http://www.impallari.com/lobster/) created by Pablo Impallari.
+- Text visible on screenshots was rendered with Lobster font (http://www.impallari.com/lobster/) created by Pablo Impallari.
 
 
 ## Installation
