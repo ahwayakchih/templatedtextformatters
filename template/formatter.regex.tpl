@@ -46,14 +46,9 @@
 			$form->appendChild($p);
 
 			$subsection = new XMLElement('div');
-			$subsection->setAttribute('class', 'frame');
-			$p = new XMLElement('p', __('Patterns and replacements'));
-			$p->setAttribute('class', 'label');
-			$subsection->appendChild($p);
+			$subsection->setAttribute('class', 'frame templatedtextformatter-duplicator');
 
 			$ol = new XMLElement('ol');
-			$ol->setAttribute('id', 'regex-duplicator');
-			$ol->setAttribute('class', 'templatedtextformatter-duplicator');
 			$ol->setAttribute('data-add', __('Add regex'));
 			$ol->setAttribute('data-remove', __('Remove regex'));
 
@@ -64,7 +59,7 @@
 				$li->setAttribute('class', ($pattern ? 'field-regex' : 'template field-regex'));
 				$li->setAttribute('data-type', 'regex');
 
-				$header = new XMLElement('header', NULL, array('class' => 'main', 'data-name' => __('Replace')));
+				$header = new XMLElement('header');
 				$header->appendChild(new XMLElement('h4', '<strong>' . __('Replace') . '</strong> <span class="type">' . __('regex') . '</span>'));
 				$li->appendChild($header);
 

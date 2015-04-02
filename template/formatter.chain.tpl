@@ -84,14 +84,9 @@
 			$p->setAttribute('class', 'help');
 			$form->appendChild($p);
 
-			$subsection = new XMLElement('div', NULL, array('class' => 'frame'));
-			$p = new XMLElement('p', __('Text formatters'));
-			$p->setAttribute('class', 'label');
-			$subsection->appendChild($p);
+			$subsection = new XMLElement('div', NULL, array('class' => 'frame templatedtextformatter-duplicator'));
 
 			$ol = new XMLElement('ol');
-			$ol->setAttribute('id', 'formatters-duplicator');
-			$ol->setAttribute('class', 'templatedtextformatter-duplicator');
 			$ol->setAttribute('data-add', __('Add formatter'));
 			$ol->setAttribute('data-remove', __('Remove formatter'));
 
@@ -100,8 +95,9 @@
 
 				$li = new XMLElement('li');
 				$li->setAttribute('class', 'unique template field-'.$about['handle']);
+				$li->setAttribute('data-type', $about['handle']);
 
-				$header = new XMLElement('header', NULL, array('class' => 'main', 'data-name' => $about['name']));
+				$header = new XMLElement('header');
 				$h4 = new XMLElement('h4', '<strong>' . $about['name'] . '</strong>' . ($about['templatedtextformatters-type'] ? ' <span class="type">' . $about['templatedtextformatters-type'] . '</span>' : ''));
 				$header->appendChild($h4);
 				$li->appendChild($header);
@@ -122,9 +118,10 @@
 
 				if ($this->_formatters[$id]) {
 					$li = new XMLElement('li');
-					$li->setAttribute('class', 'field-'.$about['handle']);
+					$li->setAttribute('class', 'unique field-'.$about['handle']);
+					$li->setAttribute('data-type', $about['handle']);
 
-					$header = new XMLElement('header', NULL, array('class' => 'main', 'data-name' => $about['name']));
+					$header = new XMLElement('header');
 					$h4 = new XMLElement('h4', '<strong>' . $about['name'] . '</strong>' . ($about['templatedtextformatters-type'] ? ' <span class="type">' . $about['templatedtextformatters-type'] . '</span>' : ''));
 					$header->appendChild($h4);
 					$li->appendChild($header);
