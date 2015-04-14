@@ -1,8 +1,8 @@
 # Templated Text Formatters
 
-- Version: 1.9
+- Version: 1.10.1
 - Author: Marcin Konicki (http://ahwayakchih.neoni.net)
-- Build Date: 26 July 2013
+- Build Date: 14 April 2015
 - Requirements: Symphony 2.4.x or greater.
 - Text visible on screenshots was rendered with Lobster font (http://www.impallari.com/lobster/) created by Pablo Impallari.
 
@@ -17,6 +17,7 @@
 
 ## Changelog
 
+- **1.10.1** Bugfixes for Symphony 2.4. This drops compatibility with Symphony 2.3.x.
 - **1.10** Update for Symphony 2.5.
 - **1.9** Update for Symphony 2.3.3. This may break compatibility with Symphony 2.3. Updated Markdown template.
 - **1.8** Update for Symphony 2.3. This drops compatibility with Symphony 2.2. Removed Makrell formatter (Makrell project is dead). Fixed a bug in XSLT template (error when there was no utility found).
@@ -36,11 +37,11 @@ There is special "chain" formatter, that will allow you to chain text formatters
 
 ## Developers
 
-Developers of text-formatters can now make them "template-friendly".
+Developers of text-formatters can make them "template-friendly".
 
 1. Create 'template' subdirectory in your formatter extension directory.
 2. Create file 'formatter.X.tpl' there. X is the ID of type, try to make it as unique as possible, so no other extensions will clash with it.
-3. Check 'template/formatter.regex.tpl' and 'template/formatter.chain.tpl' (this one is a bit more complicated) templates to see how to create new templates. In short: look for '/* BIG CAPS STRING HERE */' parts which are "placeholders" for PHP code and/or variables. Look for ttf_tokens() function which can return placeholder names and data which should be put in those placeholders. ttf_form() function allows module to add own widgets to text formatter edit page.
+3. Check 'template/formatter.regex.tpl' and 'template/formatter.chain.tpl' (this one is a bit more complicated) templates to see how to create new templates. In short: look for '/* BIG CAPS STRING HERE */' parts which are "placeholders" for PHP code and/or variables. Look for `ttf_tokens()` function which can return placeholder names and data which should be put in those placeholders. `ttf_form()` function allows module to add own widgets to text formatter edit page.
 
 
 ## Known issues

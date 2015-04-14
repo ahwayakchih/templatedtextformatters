@@ -2,7 +2,7 @@
 	<name>Templated Text Formatters</name>
 	<description>Templated Text Formatters allows you to create chains of text formatters as if they were one text formatter and/or create new text formatters based on installed templates. For example, it allows to chain Markdown and BBCode text formatters, so text will be formatted by Markdown first and than by BBCode.</description>
 	<repo type="github">https://github.com/ahwayakchih/templatedtextformatters</repo>
-	<url type="discuss">http://symphony-cms.com/discuss/thread/262/</url>
+	<url type="discuss">http://www.getsymphony.com/discuss/thread/262/</url>
 	<url type="issues">https://github.com/ahwayakchih/templatedtextformatters/issues</url>
 	<types>
 		<type>Text Formatters</type>
@@ -16,6 +16,9 @@
 		</author>
 	</authors>
 	<releases>
+		<release version="1.10.1" date="2015-04-14" min="2.4.x">
+			- Bugfixes for Symphony 2.4. This drops compatibility with Symphony 2.3.x.
+		</release>
 		<release version="1.10" date="2015-01-16" min="2.4.x">
 			- Update for Symphony 2.5.
 		</release>
