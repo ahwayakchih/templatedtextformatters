@@ -6,8 +6,8 @@
 	
 		public function about() {
 			return array('name' => __('Templated Text Formatters'),
-						 'version' => '1.10.1',
-						 'release-date' => '2015-04-14',
+						 'version' => '1.11',
+						 'release-date' => '2015-05-19',
 						 'author' => array('name' => 'Marcin Konicki',
 										   'website' => 'http://ahwayakchih.neoni.net',
 										   'email' => 'ahwayakchih@neoni.net'),

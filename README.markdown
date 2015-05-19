@@ -1,8 +1,8 @@
 # Templated Text Formatters
 
-- Version: 1.10.1
+- Version: 1.11
 - Author: Marcin Konicki (http://ahwayakchih.neoni.net)
-- Build Date: 14 April 2015
+- Build Date: 19 May 2015
 - Requirements: Symphony 2.4.x or greater.
 - Text visible on screenshots was rendered with Lobster font (http://www.impallari.com/lobster/) created by Pablo Impallari.
 
@@ -17,6 +17,7 @@
 
 ## Changelog
 
+- **1.11** Updated Markdown template to support latest "Markdown" and "Markdown Typography" extensions.
 - **1.10.1** Bugfixes for Symphony 2.4. This drops compatibility with Symphony 2.3.x.
 - **1.10** Update for Symphony 2.5.
 - **1.9** Update for Symphony 2.3.3. This may break compatibility with Symphony 2.3. Updated Markdown template.

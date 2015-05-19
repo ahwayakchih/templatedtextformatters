@@ -16,70 +16,171 @@
 		private static $_markdown;
 		private static $_purifier;
 
+		private static $_markdownTransform = false;
+
 		public function __construct() {
-			$this->_use_markdownextra = '/* USE MARKDOWNEXTRA */';
-			$this->_use_smartypants = '/* USE SMARTYPANTS */';
-			$this->_use_htmlpurifier = '/* USE HTMLPURIFIER */';
-			$this->_use_link_class = '/* USE LINK CLASS */';
-			$this->_use_backlink_class = '/* USE BACKLINK CLASS */';
+			$this->_use_markdownextra = 'no';
+			$this->_use_smartypants = 'no';
+			$this->_use_htmlpurifier = 'yes';
+			$this->_use_link_class = '';
+			$this->_use_backlink_class = '';
 		}
 		
 		public function about() {
 			return array(
-				'name' => '/* NAME */', // required
+				'name' => 'MD1', // required
 				'author' => array(
-					'name' => '/* AUTHOR NAME */',
-					'website' => '/* AUTHOR WEBSITE */',
-					'email' => '/* AUTHOR EMAIL */'
+					'name' => 'Marcin Konicki',
+					'website' => 'http://s24.neoni.net',
+					'email' => 'ahwayakchih@gmail.com'
 				),
 				'version' => '1.1',
-				'release-date' => '/* RELEASE DATE */',
-				'description' => '/* DESCRIPTION */',
-				'templatedtextformatters-version' => '/* TEMPLATEDTEXTFORMATTERS VERSION */', // required
-				'templatedtextformatters-type' => '/* TEMPLATEDTEXTFORMATTERS TYPE */' // required
+				'release-date' => '2015-05-19T15:09:48+00:00',
+				'description' => 'MarkdownExtra with SmartyPants',
+				'templatedtextformatters-version' => '1.11', // required
+				'templatedtextformatters-type' => 'markdown' // required
 			);
+		}
+
+		// Support Markdown: https://github.com/symphonycms/markdown
+		private function initializeMarkdownDefault() {
+			$markdown_path = glob(EXTENSIONS . '/markdown/lib/php-markdown-extra-*/markdown.php');
+
+			if (!$markdown_path || count($markdown_path) < 1) {
+				self::$_markdown = false;
+				return self::$_markdown;
+			}
+
+			@include_once($markdown_path[0]);
+			if ($this->_use_markdownextra == 'yes') {
+				self::$_markdown = new MarkdownExtra_Parser();
+				self::$_markdown->fn_link_class = $this->_use_link_class;
+				self::$_markdown->fn_backlink_class = $this->_use_backlink_class;
+			}
+			else {
+				self::$_markdown = new Markdown_Parser();
+			}
+
+			self::$_markdownTransform = 'transform';
+
+			return self::$_markdown;
+		}
+
+		// Support MarkdownTypography: https://github.com/hananils/markdown_typography
+		private function initializeMarkdownTypography() {
+			self::$_markdown = false;
+
+			$markdown_path = glob(EXTENSIONS . '/markdown_typography/lib/parsedown/Parsedown.php');
+
+			if (!$markdown_path || count($markdown_path) < 1) {
+				self::$_markdown = false;
+				return self::$_markdown;
+			}
+			
+			@include_once($markdown_path[0]);
+			@include_once(EXTENSIONS . '/markdown_typography/lib/parsedown-extra/ParsedownExtra.php');
+
+			if ($this->_use_markdownextra == 'yes') {
+				self::$_markdown = new ParsedownExtra();
+				self::$_markdown->setBreaksEnabled(true);
+			}
+			else {
+				self::$_markdown = new Parsedown();
+				self::$_markdown->setBreaksEnabled(true);
+			}
+
+			self::$_markdownTransform = 'text';
+
+			return self::$_markdown;
+		}
+
+		private function initializeMarkdown() {
+			if (isset(self::$_markdown)) {
+				return self::$_markdown;
+			}
+
+			if (file_exists(EXTENSIONS . '/markdown')) {
+				return self::initializeMarkdownDefault();
+			}
+			else if (file_exists(EXTENSIONS . '/markdown_typography')) {
+				return self::initializeMarkdownTypography();
+			}
+			else {
+				self::$_markdown = false;
+			}
+
+			return self::$_markdown;
+		}
+
+		private function initializeSmartyPants() {
+			if (function_exists('SmartyPants')) {
+				return true;
+			}
+
+			$search = '';
+			if (file_exists(EXTENSIONS . '/markdown')) {
+				$search = EXTENSIONS . '/markdown/lib/php-smartypants-*/smartypants.php';
+			}
+			else if (file_exists(EXTENSIONS . '/markdown_typography')) {
+				$search = EXTENSIONS . '/markdown_typography/lib/smartypants/smartypants.php';
+			}
+			else {
+				return false;
+			}
+
+			$smartypants_path = glob($search);
+			if (!$smartypants_path || count($smartypants_path) < 1) {
+				return false;
+			}
+			else {
+				@include_once($smartypants_path[0]);
+			}
+
+			return function_exists('SmartyPants');
+		}
+
+		private function initializeHTMLPurifier() {
+			if (isset(self::$_purifier)) {
+				return self::$_purifier;
+			}
+
+			self::$_purifier = false;
+
+			if (!class_exists('HTMLPurifier')) {
+				$htmlpurifier_path = glob(EXTENSIONS . '/markdown/lib/htmlpurifier-*-standalone/HTMLPurifier.standalone.php');
+				if ($htmlpurifier_path && count($htmlpurifier_path) > 0) {
+					@include_once($htmlpurifier_path[0]);
+				}
+			}
+
+			if (class_exists('HTMLPurifier')) {
+				self::$_purifier = new HTMLPurifier(array(
+					'Cache.SerializerPath' => CACHE
+				));
+			}
+
+			return self::$_purifier;
 		}
 				
 		public function run($string) {
 			if (!$string) return $string;
 
 			if (!isset(self::$_markdown)) {
-				if (!file_exists(EXTENSIONS . '/markdown/lib/php-markdown-extra-1.2.7/markdown.php')) {
-					self::$_markdown = false;
-				}
-				else {
-					@include_once(EXTENSIONS . '/markdown/lib/php-markdown-extra-1.2.7/markdown.php');
-					if ($this->_use_markdownextra == 'yes') {
-						self::$_markdown = new MarkdownExtra_Parser();
-						self::$_markdown->fn_link_class = $this->_use_link_class;
-						self::$_markdown->fn_backlink_class = $this->_use_backlink_class;
-					}
-					else self::$_markdown = new Markdown_Parser();
-				}
+				$this->initializeMarkdown();
 			}
 
-			if ($this->_use_smartypants == 'yes' && !function_exists('SmartyPants')) {
-				if (file_exists(EXTENSIONS . '/markdown/lib/php-smartypants-1.5.1f/smartypants.php')) {
-					@include_once(EXTENSIONS . '/markdown/lib/php-smartypants-1.5.1f/smartypants.php');
-				}
-				else $this->_use_smartypants = false;
+			if ($this->_use_smartypants == 'yes' && !$this->initializeSmartyPants()) {
+				$this->_use_smartypants = false;
 			}
 
-			if ($this->_use_htmlpurifier == 'yes' && !function_exists('HTMLPurifier')) {
-				if (file_exists(EXTENSIONS . '/markdown/lib/htmlpurifier-4.5.0-standalone/HTMLPurifier.standalone.php')) {
-					@include_once(EXTENSIONS . '/markdown/lib/htmlpurifier-4.5.0-standalone/HTMLPurifier.standalone.php');
-					self::$_purifier = new HTMLPurifier();
-				}
-				else {
-					$this->_use_htmlpurifier = false;
-					self::$_purifier = false;
-				}
+			if ($this->_use_htmlpurifier == 'yes' && !$this->initializeHTMLPurifier()) {
+				$this->_use_htmlpurifier = false;
 			}
 
-			$result = stripslashes(self::$_markdown !== false ? self::$_markdown->transform($string) : $string);
+			$result = stripslashes(self::$_markdownTransform !== false ? self::$_markdown->{self::$_markdownTransform}($string) : $string);
 
 			if ($this->_use_smartypants == 'yes') {
-				$result = SmartyPants($result);
+				$result = SmartyPants($result, 1);
 			}
 
 			if ($this->_use_htmlpurifier == 'yes' && self::$_purifier !== false) {
@@ -92,29 +193,41 @@
 		// Hook for driver to call when generating edit form
 		// Add form fields to $form
 		public function ttf_form(&$form, &$page) {
+			$this->initializeMarkdown();
+			if (!self::$_markdown) {
+				$form->appendChild(new XMLElement('p', __('No markdown libraries found. Please install either <a href="https://github.com/symphonycms/markdown">Markdown</a> or <a href="https://github.com/hananils/markdown_typography">Markdown Typography</a> extenstion first.')));
+				return;
+			}
+
+			$this->initializeHTMLPurifier();
+
+			// This assumes that HTMLPurifier is available only when PHPMarkdownExtra is available.
+			// TODO: change this if/when we support other source of HTMLPurifier.
+			if (self::$_purifier) {
+				$group = new XMLElement('div');
+				$group->setAttribute('class', 'two columns');
+
+				$div = new XMLElement('div', NULL, array('class' => 'column'));
+				$label = Widget::Label(__('Footnote link class'));
+				$label->appendChild(new XMLElement('i', __('optional')));
+				$input = Widget::Input('fields[use_link_class]', $this->_use_link_class);
+				$label->appendChild($input);
+				$div->appendChild($label);
+				$group->appendChild($div);
+
+				$div = new XMLElement('div', NULL, array('class' => 'column'));
+				$label = Widget::Label(__('Footnote backlink class'));
+				$label->appendChild(new XMLElement('i', __('optional')));
+				$input = Widget::Input('fields[use_backlink_class]', $this->_use_backlink_class);
+				$label->appendChild($input);
+				$div->appendChild($label);
+				$group->appendChild($div);
+
+				$form->appendChild($group);
+			}
+
 			$group = new XMLElement('div');
-			$group->setAttribute('class', 'two columns');
-
-			$div = new XMLElement('div', NULL, array('class' => 'column'));
-			$label = Widget::Label(__('Footnote link class'));
-			$label->appendChild(new XMLElement('i', __('optional')));
-			$input = Widget::Input('fields[use_link_class]', $this->_use_link_class);
-			$label->appendChild($input);
-			$div->appendChild($label);
-			$group->appendChild($div);
-
-			$div = new XMLElement('div', NULL, array('class' => 'column'));
-			$label = Widget::Label(__('Footnote backlink class'));
-			$label->appendChild(new XMLElement('i', __('optional')));
-			$input = Widget::Input('fields[use_backlink_class]', $this->_use_backlink_class);
-			$label->appendChild($input);
-			$div->appendChild($label);
-			$group->appendChild($div);
-
-			$form->appendChild($group);
-
-			$group = new XMLElement('div');
-			$group->setAttribute('class', 'three columns');
+			$group->setAttribute('class', (self::$_purifier ? 'three' : 'two') . ' columns');
 
 			$div = new XMLElement('div', NULL, array('class' => 'column'));
 			$label = Widget::Label();
@@ -130,12 +243,14 @@
 			$div->appendChild($label);
 			$group->appendChild($div);
 
-			$div = new XMLElement('div', NULL, array('class' => 'column'));
-			$label = Widget::Label();
-			$input = Widget::Input('fields[use_htmlpurifier]', 'yes', 'checkbox', ($this->_use_htmlpurifier == 'yes' ? array('checked' => 'checked') : NULL));
-			$label->setValue(__('%1$s Use <a href="%2$s" target="_blank">HTML Purifier</a> filter', array($input->generate(false), 'http://htmlpurifier.org/')));
-			$div->appendChild($label);
-			$group->appendChild($div);
+			if (self::$_purifier) {
+				$div = new XMLElement('div', NULL, array('class' => 'column'));
+				$label = Widget::Label();
+				$input = Widget::Input('fields[use_htmlpurifier]', 'yes', 'checkbox', ($this->_use_htmlpurifier == 'yes' ? array('checked' => 'checked') : NULL));
+				$label->setValue(__('%1$s Use <a href="%2$s" target="_blank">HTML Purifier</a> filter', array($input->generate(false), 'http://htmlpurifier.org/')));
+				$div->appendChild($label);
+				$group->appendChild($div);
+			}
 
 			$form->appendChild($group);
 		}

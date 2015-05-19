@@ -16,6 +16,9 @@
 		</author>
 	</authors>
 	<releases>
+		<release version="1.11" date="2015-05-19" min="2.4.x">
+			- Updated Markdown template to support latest "Markdown" and "Markdown Typography" extensions.
+		</release>
 		<release version="1.10.1" date="2015-04-14" min="2.4.x">
 			- Bugfixes for Symphony 2.4. This drops compatibility with Symphony 2.3.x.
 		</release>
